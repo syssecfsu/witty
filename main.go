@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"net/http"
 	"net/url"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
@@ -12,11 +13,11 @@ import (
 var host *string = nil
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize : 4096,
+	ReadBufferSize:  4096,
 	WriteBufferSize: 4096,
 	CheckOrigin: func(r *http.Request) bool {
 		org := r.Header.Get("Origin")
-		h,err := url.Parse(org)
+		h, err := url.Parse(org)
 
 		if err != nil {
 			return false
@@ -32,9 +33,9 @@ var upgrader = websocket.Upgrader{
 
 // handle websockets
 func wsHandler(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w,r, nil)
+	conn, err := upgrader.Upgrade(w, r, nil)
 
-	if err!= nil {
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -44,12 +45,12 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		msgType, p, err := conn.ReadMessage()
 
-		if err!= nil {
+		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		if err := conn.WriteMessage(msgType, p); err!= nil {
+		if err := conn.WriteMessage(msgType, p); err != nil {
 			fmt.Println(err)
 			return
 		}
@@ -57,7 +58,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // return files
-func fileHandler (c *gin.Context, fname string) {
+func fileHandler(c *gin.Context, fname string) {
 	// if the URL has no fname, c.Param returns "/"
 	if fname == "/" {
 		fname = "/index.html"
@@ -76,18 +77,18 @@ func fileHandler (c *gin.Context, fname string) {
 	}
 }
 
-func main () {
+func main() {
 	rt := gin.Default()
 
 	rt.SetTrustedProxies(nil)
 	rt.LoadHTMLGlob("assets/*.html")
 
-	rt.GET("/*fname", func(c *gin.Context){
+	rt.GET("/*fname", func(c *gin.Context) {
 		fname := c.Param("fname")
 
 		// ws is a special case to create a new websocket
 		switch fname {
-		case "/ws": 
+		case "/ws":
 			wsHandler(c.Writer, c.Request)
 		default:
 			fileHandler(c, fname)
