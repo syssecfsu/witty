@@ -8,7 +8,44 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+
+	"os"
+	"os/exec"
+
+	"github.com/creack/pty"
+	"golang.org/x/term"
 )
+
+func createPty(cmdline string) (*os.File, *term.State, error) {
+	// Create a shell command.
+	cmd := exec.Command(cmdline)
+
+	// Start the command with a pty.
+	ptmx, err := pty.Start(cmd)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Use fixed size, the xterm is initalized as 122x37,
+	// But we set pty to 120x36. Using fullsize will lead
+	// some program to misbehaive.
+	pty.Setsize(ptmx, &pty.Winsize{
+		Cols: 120,
+		Rows: 36,
+	})
+
+	// Set stdin in raw mode. This might cause problems in ssh.
+	// ignore the error if it so happens
+	termState, err := term.MakeRaw(int(os.Stdin.Fd()))
+
+	if err != nil {
+		fmt.Println(err)
+		return ptmx, nil, err
+	}
+
+	return ptmx, termState, nil
+}
 
 var host *string = nil
 
@@ -42,15 +79,56 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Created the websocket")
 
+	ptmx, termState, err := createPty("bash")
+
+	defer func() {
+		//close the terminal and restore the terminal state
+		if termState != nil {
+			term.Restore(int(os.Stdin.Fd()), termState)
+		}
+	}()
+
+	if err != nil {
+		fmt.Println("failed to create PTY", err)
+		return
+	}
+
+	// pipe the msgs from WS to pty, we need to use goroutine here
+	go func() {
+		for {
+			_, buf, err := conn.ReadMessage()
+
+			if err != nil {
+				fmt.Println(err)
+				// We need to close pty so the goroutine and this one can end
+				// using defer will cause problems
+				ptmx.Close()
+				return
+			}
+
+			_, err = ptmx.Write(buf)
+
+			if err != nil {
+				fmt.Println(err)
+				ptmx.Close()
+				return
+			}
+		}
+	}()
+
+	readBuf := make([]byte, 4096)
+
 	for {
-		msgType, p, err := conn.ReadMessage()
+		n, err := ptmx.Read(readBuf)
 
 		if err != nil {
 			fmt.Println(err)
+			ptmx.Close()
 			return
 		}
 
-		if err := conn.WriteMessage(msgType, p); err != nil {
+		if err = conn.WriteMessage(websocket.BinaryMessage, readBuf[:n]); err != nil {
+			ptmx.Close()
 			fmt.Println(err)
 			return
 		}

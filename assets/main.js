@@ -31,7 +31,7 @@ function createTerminal() {
   });
 
   term.open(document.getElementById('terminal_view'));
-  term.resize(120, 36);
+  term.resize(122, 37);
 
   const weblinksAddon = new WebLinksAddon.WebLinksAddon();
   term.loadAddon(weblinksAddon);
