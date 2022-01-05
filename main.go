@@ -4,15 +4,13 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
-
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
-
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/creack/pty"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"golang.org/x/term"
 )
 
