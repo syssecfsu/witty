@@ -1,4 +1,4 @@
-module github.com/syssecfsu/wsterm
+module github.com/syssecfsu/web_terminal
 
 go 1.17
 

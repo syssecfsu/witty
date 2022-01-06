@@ -28,6 +28,7 @@ function createTerminal() {
     fontSize: 12,
     theme: baseTheme,
     convertEol: true,
+    cursorBlink: true,
   });
 
   term.open(document.getElementById('terminal_view'));
