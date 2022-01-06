@@ -51,6 +51,7 @@ func createPty(cmdline string) (*os.File, *exec.Cmd, error) {
 		Rows: 36,
 	})
 
+	log.Printf("Create shell process %v (%v)", cmdline, cmd.Process.Pid)
 	return ptmx, cmd, nil
 }
 
@@ -188,20 +189,20 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	// send an interrupt, this will cause the shell process to
 	// return from syscalls if any is pending
 	if err := proc.Signal(os.Interrupt); err != nil {
-		log.Println("Failed to send Interrupt to shell process: ", err)
+		log.Printf("Failed to send Interrupt to shell process(%v): %v ", proc.Pid, err)
 	}
 
 	// Wait for a second for shell process to interrupt before kill it
 	time.Sleep(time.Second)
 
-	log.Printf("Try to kill the shell process")
+	log.Printf("Try to kill the shell process(%v)", proc.Pid)
 
 	if err := proc.Signal(os.Kill); err != nil {
-		log.Println("Failed to send KILL to shell process: ", err)
+		log.Printf("Failed to send KILL to shell process(%v): %v", proc.Pid, err)
 	}
 
 	if _, err := proc.Wait(); err != nil {
-		log.Println("Failed to wait for shell process: ", err)
+		log.Printf("Failed to wait for shell process(%v): %v", proc.Pid, err)
 	}
 }
 
@@ -226,7 +227,7 @@ func fileHandler(c *gin.Context, fname string) {
 }
 
 func main() {
-	fp, err := os.OpenFile("web_term.log", os.O_RDWR|os.O_CREATE, 0644)
+	fp, err := os.OpenFile("web_term.log", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 
 	if err == nil {
 		defer fp.Close()
