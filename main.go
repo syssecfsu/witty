@@ -81,6 +81,8 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer func() {
 		//close the terminal and restore the terminal state
+		ptmx.Close()
+
 		if termState != nil {
 			term.Restore(int(os.Stdin.Fd()), termState)
 		}
