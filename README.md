@@ -8,10 +8,23 @@ window (xterm.js) and create a websocket with the server. On
 the server side, it serves the basic HTML/JS/CSS files and 
 websockets (by shovling the data between pty and xterm).
 
-It is amazing what you can do with less than 200 lines of go code. 
+It is amazing what you can do with 260 lines of go code. 
 
 It is just a simple demo in case some people are interested in 
 how to setup xterm.js with websocket. 
+
+To use the program, download/clone the code, and in the web_terminal
+directory, run ```go build .```, this will create the binary called
+web_terminal. To run it, use ```./web_terminal cmd options_to_cmd```.
+If no cmd and options are given, web_terminal will run bash by default.
+You can run shells but also single programs, such as htop. The program
+has been tested on Linux, WSL2, Raspberry Pi 3B (Debian), and MacOSX.
+
+***known bug***
+
+On MacOS X, running zsh with web_terminal will produce an extra % 
+each time. Consider it a ___feautre___, will not fix unless there is a 
+pull request. 
 
 
 **NOTE**
