@@ -224,7 +224,11 @@ func fileHandler(c *gin.Context, fname string) {
 	} else {
 		//c.HTML interprets the file as HTML file
 		//we do not need that for regular files
-		c.File(fmt.Sprint("./assets/", fname))
+		if strings.HasPrefix(fname, "xterm") {
+			c.File(fmt.Sprint("./assets/external/", fname))
+		} else {
+			c.File(fmt.Sprint("./assets/", fname))
+		}
 	}
 }
 
