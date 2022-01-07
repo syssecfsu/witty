@@ -155,6 +155,8 @@ func fromPtyStdout(ws *websocket.Conn, ptmx *os.File, done chan struct{}) {
 	time.Sleep(closeGracePeriod)
 }
 
+var cmdToExec string = "bash"
+
 // handle websockets
 func wsHandler(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
@@ -168,7 +170,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("\n\nCreated the websocket")
 
-	ptmx, cmd, err := createPty("bash")
+	ptmx, cmd, err := createPty(cmdToExec)
 
 	if err != nil {
 		log.Println("Failed to create PTY: ", err)
@@ -233,6 +235,17 @@ func main() {
 		defer fp.Close()
 		log.SetOutput(fp)
 		gin.DefaultWriter = fp
+	}
+
+	// parse the arguments. User can pass the command to execute
+	// by default, we use bash, but macos users might want to use zsh
+	// you can also run single program, such as pstree, htop...
+	// but program might misbehave (htop seems to be fine)
+	args := os.Args
+
+	if len(args) > 1 {
+		cmdToExec = strings.Join(args[1:], " ")
+		log.Println(cmdToExec)
 	}
 
 	rt := gin.Default()
