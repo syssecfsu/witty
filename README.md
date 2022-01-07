@@ -30,8 +30,8 @@ has been tested on Linux, WSL2, Raspberry Pi 3B (Debian), and MacOSX.
 ***known bug***
 
 On MacOS X, running zsh with web_terminal will produce an extra % 
-each time. Consider it a ___feautre___, will not fix unless there is a 
-pull request. 
+each time in Google Chrome. Consider it a ___feautre___, will not 
+fix unless there is a pull request. Safari works fine though. 
 
 
 **NOTE**
@@ -41,6 +41,8 @@ shell to anyone that can access your network and Do NOT leave
 the server running.___
 
 Here is a screencast for sshing into Raspberry Pi running 
-[pi-hole](https://pi-hole.net/) (```./web_terminal ssh 192.168.1.2 -l pi```):
+[pi-hole](https://pi-hole.net/) 
+(```./web_terminal ssh 192.168.1.2 -l pi```,
+web_terminal runs in a WSL2 VM on Windows):
 
 <img src="https://github.com/syssecfsu/web_terminal/blob/master/extra/screencast.gif?raw=true" width="800px">
