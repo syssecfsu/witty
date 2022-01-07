@@ -32,9 +32,9 @@ const (
 	closeGracePeriod = 10 * time.Second
 )
 
-func createPty(cmdline string) (*os.File, *exec.Cmd, error) {
+func createPty(cmdline []string) (*os.File, *exec.Cmd, error) {
 	// Create a shell command.
-	cmd := exec.Command(cmdline)
+	cmd := exec.Command(cmdline[0], cmdline[1:]...)
 
 	// Start the command with a pty.
 	ptmx, err := pty.Start(cmd)
@@ -155,7 +155,7 @@ func fromPtyStdout(ws *websocket.Conn, ptmx *os.File, done chan struct{}) {
 	time.Sleep(closeGracePeriod)
 }
 
-var cmdToExec string = "bash"
+var cmdToExec = []string{"bash"}
 
 // handle websockets
 func wsHandler(w http.ResponseWriter, r *http.Request) {
@@ -244,7 +244,7 @@ func main() {
 	args := os.Args
 
 	if len(args) > 1 {
-		cmdToExec = strings.Join(args[1:], " ")
+		cmdToExec = args[1:]
 		log.Println(cmdToExec)
 	}
 
