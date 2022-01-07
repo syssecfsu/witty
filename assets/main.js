@@ -43,7 +43,7 @@ function createTerminal() {
   fitAddon.fit();
 
   // create the websocket and connect to the server
-  const ws_uri = "ws://" + window.location.host + "/ws";
+  const ws_uri = "wss://" + window.location.host + "/ws";
   const socket = new WebSocket(ws_uri);
   const attachAddon = new AttachAddon.AttachAddon(socket);
   term.loadAddon(attachAddon);

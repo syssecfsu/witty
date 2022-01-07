@@ -128,7 +128,7 @@ func toPtyStdin(ws *websocket.Conn, ptmx *os.File) {
 	}
 }
 
-// shovel data from websocket to pty stdin
+// shovel data from pty Stdout to WS
 func fromPtyStdout(ws *websocket.Conn, ptmx *os.File, done chan struct{}) {
 	readBuf := make([]byte, 4096)
 
@@ -224,7 +224,7 @@ func fileHandler(c *gin.Context, fname string) {
 	} else {
 		//c.HTML interprets the file as HTML file
 		//we do not need that for regular files
-		c.File(fmt.Sprint("assets/", fname))
+		c.File(fmt.Sprint("./assets/", fname))
 	}
 }
 
@@ -251,7 +251,7 @@ func main() {
 	rt := gin.Default()
 
 	rt.SetTrustedProxies(nil)
-	rt.LoadHTMLGlob("assets/*.html")
+	rt.LoadHTMLGlob("./assets/*.html")
 
 	rt.GET("/*fname", func(c *gin.Context) {
 		fname := c.Param("fname")
@@ -265,5 +265,5 @@ func main() {
 		}
 	})
 
-	rt.Run(":8080")
+	rt.RunTLS(":8080", "./tls/cert.pem", "./tls/private-key.pem")
 }
