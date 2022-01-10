@@ -159,10 +159,10 @@ func (tc *TermConn) ptyStdoutToWs() {
 		// handle viewers, we want to use non-blocking receive
 		select {
 		case watcher := <-tc.vchan:
-			log.Println("Received watcher", watcher)
+			log.Println("Received viewer", watcher)
 			viewers = append(viewers, watcher)
 		default:
-			log.Println("no watcher received")
+			//log.Println("no viewer received")
 		}
 
 		// We could add ws to viewers as well (then we can use io.MultiWriter),
@@ -195,15 +195,19 @@ func (tc *TermConn) ptyStdoutToWs() {
 		}
 	}
 
+	close(tc.done)
 	tc.ws.SetWriteDeadline(time.Now().Add(writeWait))
 	tc.ws.WriteMessage(websocket.CloseMessage,
 		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Pty closed"))
 	time.Sleep(closeGracePeriod)
 }
 
-func (tc *TermConn) release() {
+func (tc *TermConn) release(unreg bool) {
 	log.Println("releasing", tc.name)
-	registry.delDoer(tc.name)
+
+	if unreg {
+		registry.delDoer(tc.name)
+	}
 
 	if tc.ptmx != nil {
 		// cleanup the pty and its related process
@@ -231,7 +235,6 @@ func (tc *TermConn) release() {
 			log.Printf("Failed to wait for shell process(%v): %v", proc.Pid, err)
 		}
 
-		close(tc.done)
 		close(tc.vchan)
 	}
 
@@ -253,7 +256,7 @@ func wsHandleDoer(w http.ResponseWriter, r *http.Request) {
 		name: "main",
 	}
 
-	defer tc.release()
+	defer tc.release(true)
 	log.Println("\n\nCreated the websocket")
 
 	if err := tc.createPty(cmdToExec); err != nil {

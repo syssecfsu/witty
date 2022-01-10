@@ -24,8 +24,9 @@ func (reg *Registry) init() {
 func (d *Registry) addDoer(name string, tc *TermConn) {
 	d.mtx.Lock()
 	if val, ok := d.doers[name]; ok {
-		log.Printf(name, "already exist in the dispatcher")
-		val.release()
+		log.Println(name, "already exist in the dispatcher", val, tc)
+		delete(d.doers, name)
+		val.release(false) // do not unregister in release, otherwise it is a deadlock
 	}
 	d.doers[name] = tc
 	d.mtx.Unlock()
