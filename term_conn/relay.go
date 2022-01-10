@@ -1,10 +1,9 @@
 //This file contains code to relay traffic between websocket and pty
-package main
+package term_conn
 
 import (
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
 	"sync"
@@ -35,24 +34,11 @@ const (
 	closeGracePeriod = 10 * time.Second
 )
 
-var host *string = nil
-
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  readBufferSize,
 	WriteBufferSize: WriteBufferSize,
 	CheckOrigin: func(r *http.Request) bool {
-		org := r.Header.Get("Origin")
-		h, err := url.Parse(org)
-
-		if err != nil {
-			return false
-		}
-
-		if (host == nil) || (*host != h.Host) {
-			log.Println("Failed origin check of ", org)
-		}
-
-		return (host != nil) && (*host == h.Host)
+		return true
 	},
 }
 
@@ -310,7 +296,7 @@ func (tc *TermConn) release() {
 }
 
 // handle websockets
-func wsHandlePlayer(w http.ResponseWriter, r *http.Request) {
+func handlePlayer(w http.ResponseWriter, r *http.Request, cmdline []string) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
@@ -330,7 +316,7 @@ func wsHandlePlayer(w http.ResponseWriter, r *http.Request) {
 	tc.pty_done = make(chan struct{})
 	tc.vchan = make(chan *websocket.Conn)
 
-	if err := tc.createPty(cmdToExec); err != nil {
+	if err := tc.createPty(cmdline); err != nil {
 		log.Println("Failed to create PTY: ", err)
 		return
 	}
@@ -353,7 +339,7 @@ func wsHandlePlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 // handle websockets
-func wsHandleViewer(w http.ResponseWriter, r *http.Request) {
+func handleViewer(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
@@ -368,10 +354,15 @@ func wsHandleViewer(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func wsHandler(w http.ResponseWriter, r *http.Request, isViewer bool) {
+func ConnectTerm(w http.ResponseWriter, r *http.Request, isViewer bool, cmdline []string) {
 	if !isViewer {
-		wsHandlePlayer(w, r)
+		handlePlayer(w, r, cmdline)
 	} else {
-		wsHandleViewer(w, r)
+		handleViewer(w, r)
 	}
+}
+
+func Init(checkOrigin func(r *http.Request) bool) {
+	upgrader.CheckOrigin = checkOrigin
+	registry.init()
 }

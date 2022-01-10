@@ -3,13 +3,33 @@ package main
 import (
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/syssecfsu/web_terminal/term_conn"
 )
 
 // command line options
 var cmdToExec = []string{"bash"}
+
+var host *string = nil
+
+// simple function to check origin
+func checkOrigin(r *http.Request) bool {
+	org := r.Header.Get("Origin")
+	h, err := url.Parse(org)
+
+	if err != nil {
+		return false
+	}
+
+	if (host == nil) || (*host != h.Host) {
+		log.Println("Failed origin check of ", org)
+	}
+
+	return (host != nil) && (*host == h.Host)
+}
 
 func main() {
 	fp, err := os.OpenFile("web_term.log", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
@@ -31,8 +51,6 @@ func main() {
 		log.Println(cmdToExec)
 	}
 
-	registry.init()
-
 	rt := gin.Default()
 
 	rt.SetTrustedProxies(nil)
@@ -40,17 +58,17 @@ func main() {
 
 	rt.GET("/view/*sname", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "Watcher terminal",
+			"title": "Viewer terminal",
 			"path":  "/ws_view",
 		})
 	})
 
 	rt.GET("/ws_do", func(c *gin.Context) {
-		wsHandler(c.Writer, c.Request, false)
+		term_conn.ConnectTerm(c.Writer, c.Request, false, cmdToExec)
 	})
 
 	rt.GET("/ws_view", func(c *gin.Context) {
-		wsHandler(c.Writer, c.Request, true)
+		term_conn.ConnectTerm(c.Writer, c.Request, true, nil)
 	})
 
 	// handle static files
@@ -58,11 +76,14 @@ func main() {
 
 	rt.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "Master terminal",
+			"title": "Interactive terminal",
 			"path":  "/ws_do",
 		})
+
 		host = &c.Request.Host
 	})
+
+	term_conn.Init(checkOrigin)
 
 	rt.RunTLS(":8080", "./tls/cert.pem", "./tls/private-key.pem")
 }
