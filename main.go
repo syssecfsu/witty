@@ -31,23 +31,25 @@ func main() {
 		log.Println(cmdToExec)
 	}
 
+	registry.init()
+
 	rt := gin.Default()
 
 	rt.SetTrustedProxies(nil)
 	rt.LoadHTMLGlob("./assets/*.html")
 
-	rt.GET("/watch/*sname", func(c *gin.Context) {
+	rt.GET("/view/*sname", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title": "Watcher terminal",
-			"path":  "/ws_watch",
+			"path":  "/ws_view",
 		})
 	})
 
-	rt.GET("/ws_run", func(c *gin.Context) {
+	rt.GET("/ws_do", func(c *gin.Context) {
 		wsHandler(c.Writer, c.Request, false)
 	})
 
-	rt.GET("/ws_watch", func(c *gin.Context) {
+	rt.GET("/ws_view", func(c *gin.Context) {
 		wsHandler(c.Writer, c.Request, true)
 	})
 
@@ -57,7 +59,7 @@ func main() {
 	rt.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title": "Master terminal",
-			"path":  "/ws_run ",
+			"path":  "/ws_do",
 		})
 		host = &c.Request.Host
 	})

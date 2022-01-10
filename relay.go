@@ -30,7 +30,20 @@ const (
 	closeGracePeriod = 10 * time.Second
 )
 
-func createPty(cmdline []string) (*os.File, *exec.Cmd, error) {
+// TermConn represents the connected websocket and pty.
+// if isViewer is true
+type TermConn struct {
+	ws   *websocket.Conn
+	name string
+
+	// only valid for doers
+	ptmx  *os.File             // the pty that runs the command
+	cmd   *exec.Cmd            // represents the process, we need it to terminate the process
+	vchan chan *websocket.Conn // channel to receive viewers
+	done  chan struct{}
+}
+
+func (tc *TermConn) createPty(cmdline []string) error {
 	// Create a shell command.
 	cmd := exec.Command(cmdline[0], cmdline[1:]...)
 
@@ -38,19 +51,22 @@ func createPty(cmdline []string) (*os.File, *exec.Cmd, error) {
 	ptmx, err := pty.Start(cmd)
 
 	if err != nil {
-		return nil, nil, err
+		return err
 	}
 
 	// Use fixed size, the xterm is initalized as 122x37,
 	// But we set pty to 120x36. Using fullsize will lead
-	// some program to misbehaive.
+	// some program to misbehave.
 	pty.Setsize(ptmx, &pty.Winsize{
 		Cols: 120,
 		Rows: 36,
 	})
 
+	tc.ptmx = ptmx
+	tc.cmd = cmd
+
 	log.Printf("Create shell process %v (%v)", cmdline, cmd.Process.Pid)
-	return ptmx, cmd, nil
+	return nil
 }
 
 var host *string = nil
@@ -75,20 +91,20 @@ var upgrader = websocket.Upgrader{
 }
 
 // Periodically send ping message to detect the status of the ws
-func ping(ws *websocket.Conn, done chan struct{}) {
+func (tc *TermConn) ping() {
 	ticker := time.NewTicker(pingPeriod)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
-			err := ws.WriteControl(websocket.PingMessage,
+			err := tc.ws.WriteControl(websocket.PingMessage,
 				[]byte{}, time.Now().Add(writeWait))
 
 			if err != nil {
 				log.Println("Failed to write ping message:", err)
 			}
 
-		case <-done:
+		case <-tc.done:
 			log.Println("Exit ping routine as stdout is going away")
 			return
 		}
@@ -96,28 +112,29 @@ func ping(ws *websocket.Conn, done chan struct{}) {
 }
 
 // shovel data from websocket to pty stdin
-func toPtyStdin(ws *websocket.Conn, ptmx *os.File) {
-	ws.SetReadLimit(maxMessageSize)
+func (tc *TermConn) wsToPtyStdin() {
+	tc.ws.SetReadLimit(maxMessageSize)
 
 	// set the readdeadline. The idea here is simple,
 	// as long as we keep receiving pong message,
 	// the readdeadline will keep updating. Otherwise
 	// read will timeout.
-	ws.SetReadDeadline(time.Now().Add(pongWait))
-	ws.SetPongHandler(func(string) error {
-		ws.SetReadDeadline(time.Now().Add(pongWait))
+	tc.ws.SetReadDeadline(time.Now().Add(pongWait))
+	tc.ws.SetPongHandler(func(string) error {
+		tc.ws.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
 
+	// we do not need to forward user input to viewers, only the stdout
 	for {
-		_, buf, err := ws.ReadMessage()
+		_, buf, err := tc.ws.ReadMessage()
 
 		if err != nil {
 			log.Println("Failed to receive data from ws:", err)
 			break
 		}
 
-		_, err = ptmx.Write(buf)
+		_, err = tc.ptmx.Write(buf)
 
 		if err != nil {
 			log.Println("Failed to send data to pty stdin: ", err)
@@ -127,71 +144,103 @@ func toPtyStdin(ws *websocket.Conn, ptmx *os.File) {
 }
 
 // shovel data from pty Stdout to WS
-func fromPtyStdout(ws *websocket.Conn, ptmx *os.File, done chan struct{}) {
-	var watchers []*websocket.Conn
+func (tc *TermConn) ptyStdoutToWs() {
+	var viewers []*websocket.Conn
 	readBuf := make([]byte, 4096)
 
 	for {
-		n, err := ptmx.Read(readBuf)
+		n, err := tc.ptmx.Read(readBuf)
 
 		if err != nil {
 			log.Println("Failed to read from pty stdout: ", err)
 			break
 		}
 
-		// handle watchers, we want to use non-blocking receive
+		// handle viewers, we want to use non-blocking receive
 		select {
-		case watcher := <-watcherChan:
+		case watcher := <-tc.vchan:
 			log.Println("Received watcher", watcher)
-			watchers = append(watchers, watcher)
-
+			viewers = append(viewers, watcher)
 		default:
 			log.Println("no watcher received")
 		}
 
-		// We could add ws to watchers as well, but we want to handle it
-		// differently if there is an error
-		ws.SetWriteDeadline(time.Now().Add(writeWait))
-		if ws.WriteMessage(websocket.BinaryMessage, readBuf[0:n]); err != nil {
+		// We could add ws to viewers as well (then we can use io.MultiWriter),
+		// but we want to handle errors differently
+		tc.ws.SetWriteDeadline(time.Now().Add(writeWait))
+		if tc.ws.WriteMessage(websocket.BinaryMessage, readBuf[0:n]); err != nil {
 			log.Println("Failed to write message: ", err)
 			break
 		}
 
-		for i, w := range watchers {
+		for i, w := range viewers {
 			if w == nil {
 				continue
 			}
 
+			// if the viewer exits, we will just ignore the error
 			if err = w.WriteMessage(websocket.BinaryMessage, readBuf[0:n]); err != nil {
 				log.Println("Failed to write message to watcher: ", err)
 
-				watchers[i] = nil
+				viewers[i] = nil
 				w.Close()
 			}
 		}
 	}
 
-	close(done)
-	close(watcherChan)
-	watcherChan = nil
-
 	// close the watcher
-	for _, w := range watchers {
+	for _, w := range viewers {
 		if w != nil {
 			w.Close()
 		}
 	}
 
-	ws.SetWriteDeadline(time.Now().Add(writeWait))
-	ws.WriteMessage(websocket.CloseMessage,
+	tc.ws.SetWriteDeadline(time.Now().Add(writeWait))
+	tc.ws.WriteMessage(websocket.CloseMessage,
 		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Pty closed"))
 	time.Sleep(closeGracePeriod)
 }
 
-var watcherChan chan *websocket.Conn
+func (tc *TermConn) release() {
+	log.Println("releasing", tc.name)
+	registry.delDoer(tc.name)
+
+	if tc.ptmx != nil {
+		// cleanup the pty and its related process
+		tc.ptmx.Close()
+
+		// terminate the command line process
+		proc := tc.cmd.Process
+
+		// send an interrupt, this will cause the shell process to
+		// return from syscalls if any is pending
+		if err := proc.Signal(os.Interrupt); err != nil {
+			log.Printf("Failed to send Interrupt to shell process(%v): %v ", proc.Pid, err)
+		}
+
+		// Wait for a second for shell process to interrupt before kill it
+		time.Sleep(time.Second)
+
+		log.Printf("Try to kill the shell process(%v)", proc.Pid)
+
+		if err := proc.Signal(os.Kill); err != nil {
+			log.Printf("Failed to send KILL to shell process(%v): %v", proc.Pid, err)
+		}
+
+		if _, err := proc.Wait(); err != nil {
+			log.Printf("Failed to wait for shell process(%v): %v", proc.Pid, err)
+		}
+
+		close(tc.done)
+		close(tc.vchan)
+	}
+
+	tc.ws.Close()
+
+}
 
 // handle websockets
-func wsHandleRun(w http.ResponseWriter, r *http.Request) {
+func wsHandleDoer(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
@@ -199,51 +248,33 @@ func wsHandleRun(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	defer ws.Close()
+	tc := TermConn{
+		ws:   ws,
+		name: "main",
+	}
 
+	defer tc.release()
 	log.Println("\n\nCreated the websocket")
 
-	ptmx, cmd, err := createPty(cmdToExec)
-
-	if err != nil {
+	if err := tc.createPty(cmdToExec); err != nil {
 		log.Println("Failed to create PTY: ", err)
 		return
 	}
 
-	done := make(chan struct{})
-	watcherChan = make(chan *websocket.Conn)
+	tc.done = make(chan struct{})
+	tc.vchan = make(chan *websocket.Conn)
 
-	go fromPtyStdout(ws, ptmx, done)
-	go ping(ws, done)
+	registry.addDoer("main", &tc)
 
-	toPtyStdin(ws, ptmx)
+	// main event loop to shovel data between ws and pty
+	go tc.ping()
+	go tc.wsToPtyStdin()
 
-	// cleanup the pty and its related process
-	ptmx.Close()
-	proc := cmd.Process
-
-	// send an interrupt, this will cause the shell process to
-	// return from syscalls if any is pending
-	if err := proc.Signal(os.Interrupt); err != nil {
-		log.Printf("Failed to send Interrupt to shell process(%v): %v ", proc.Pid, err)
-	}
-
-	// Wait for a second for shell process to interrupt before kill it
-	time.Sleep(time.Second)
-
-	log.Printf("Try to kill the shell process(%v)", proc.Pid)
-
-	if err := proc.Signal(os.Kill); err != nil {
-		log.Printf("Failed to send KILL to shell process(%v): %v", proc.Pid, err)
-	}
-
-	if _, err := proc.Wait(); err != nil {
-		log.Printf("Failed to wait for shell process(%v): %v", proc.Pid, err)
-	}
+	tc.ptyStdoutToWs()
 }
 
 // handle websockets
-func wsHandleWatcher(w http.ResponseWriter, r *http.Request) {
+func wsHandleViewer(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
@@ -252,21 +283,16 @@ func wsHandleWatcher(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("\n\nCreated the websocket")
-
-	if watcherChan == nil {
-		log.Println("No active runner, create a runner first")
+	if !registry.sendToDoer("main", ws) {
+		log.Println("Failed to send websocket to doer, close it")
 		ws.Close()
-		return
 	}
-
-	// hand the websocket to runner
-	watcherChan <- ws
 }
 
-func wsHandler(w http.ResponseWriter, r *http.Request, isWatcher bool) {
-	if !isWatcher {
-		wsHandleRun(w, r)
+func wsHandler(w http.ResponseWriter, r *http.Request, isViewer bool) {
+	if !isViewer {
+		wsHandleDoer(w, r)
 	} else {
-		wsHandleWatcher(w, r)
+		wsHandleViewer(w, r)
 	}
 }
