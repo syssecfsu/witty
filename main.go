@@ -57,9 +57,20 @@ func main() {
 	rt.LoadHTMLGlob("./assets/*.html")
 
 	rt.GET("/view/*sname", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
+		c.HTML(http.StatusOK, "term.html", gin.H{
 			"title": "Viewer terminal",
 			"path":  "/ws_view",
+		})
+	})
+
+	rt.GET("/new", func(c *gin.Context) {
+		if host == nil {
+			host = &c.Request.Host
+		}
+
+		c.HTML(http.StatusOK, "term.html", gin.H{
+			"title": "Interactive terminal",
+			"path":  "/ws_do",
 		})
 	})
 
@@ -75,12 +86,12 @@ func main() {
 	rt.Static("/assets", "./assets")
 
 	rt.GET("/", func(c *gin.Context) {
+		host = &c.Request.Host
+
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title": "Interactive terminal",
 			"path":  "/ws_do",
 		})
-
-		host = &c.Request.Host
 	})
 
 	term_conn.Init(checkOrigin)

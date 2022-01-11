@@ -22,10 +22,18 @@
 </head>
 
 <body>
-  <h2>{{.title}}</h2>
-  <div id="terminal">
-    <div id="terminal_view"></div>
+  <div class="banner">
+    <div class="banner-content">
+      {{.title}}
+    </div>
   </div>
+
+  <div style="margin-top: 7em;">
+    <div id="terminal">
+      <div id="terminal_view"></div>
+    </div>
+  </div>
+
   <script>
     term = createTerminal("{{.path}}");
     // print something to test output and scroll
@@ -41,6 +49,7 @@
 
     term.writeln(str);
   </script>
+
 </body>
 
 </html>
