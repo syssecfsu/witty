@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Fira+Sans&display=swap" rel="stylesheet">
+
+  <script src="/assets/external/xterm.js"></script>
+  <script src="/assets/external/xterm-addon-attach.js"></script>
+  <script src="/assets/external/xterm-addon-fit.js"></script>
+  <script src="/assets/external/xterm-addon-web-links.js"></script>
+
+  <script src="/assets/main.js"></script>
+
+  <link rel="stylesheet" href="/assets/external/xterm.css" />
+  <link rel="stylesheet" href="/assets/main.css" />
+
+  <title>{{.title}}</title>
+</head>
+
+<body>
+  <h2>{{.title}}</h2>
+  <div id="terminal">
+    <div id="terminal_view"></div>
+  </div>
+  <script>
+    term = createTerminal("{{.path}}");
+    // print something to test output and scroll
+    var str = [
+      ' ┌────────────────────────────────────────────────────────────────────────────┐',
+      ' │  \x1b[32mXterm.js\x1b[0m is the frontend component that powers many terminals including,  │',
+      ' │                               \x1b[3mVS Code\x1b[0m, \x1b[3mHyper\x1b[0m and \x1b[3mTheia\x1b[0m!                    │',
+      ' │                                                                            │',
+      ' │                             \x1b[34mhttps://xtermjs.org\x1b[0m (<-try to click it!)       │',
+      ' └────────────────────────────────────────────────────────────────────────────┘',
+      ''
+    ].join('\n\r');
+
+    term.writeln(str);
+  </script>
+</body>
+
+</html>

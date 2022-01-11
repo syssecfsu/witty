@@ -1,46 +1,74 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Fira+Sans&display=swap" rel="stylesheet">
+  <title>Web Terminal</title>
 
-  <script src="/assets/external/xterm.js"></script>
-  <script src="/assets/external/xterm-addon-attach.js"></script>
-  <script src="/assets/external/xterm-addon-fit.js"></script>
-  <script src="/assets/external/xterm-addon-web-links.js"></script>
+  <!-- Bootstrap core CSS -->
+  <link href="external/bootstrap.min.css" rel="stylesheet">
+  <script src=
+  "external/bootstrap.min.js">
+      </script>
 
-  <script src="/assets/main.js"></script>
-
-  <link rel="stylesheet" href="/assets/external/xterm.css" />
-  <link rel="stylesheet" href="/assets/main.css" />
-
-  <title>{{.title}}</title>
 </head>
 
 <body>
-  <h2>{{.title}}</h2>
-  <div id="terminal">
-    <div id="terminal_view"></div>
-  </div>
-  <script>
-    term = createTerminal("{{.path}}");
-    // print something to test output and scroll
-    var str = [
-      ' ┌────────────────────────────────────────────────────────────────────────────┐',
-      ' │  \x1b[32mXterm.js\x1b[0m is the frontend component that powers many terminals including,  │',
-      ' │                               \x1b[3mVS Code\x1b[0m, \x1b[3mHyper\x1b[0m and \x1b[3mTheia\x1b[0m!                    │',
-      ' │                                                                            │',
-      ' │                             \x1b[34mhttps://xtermjs.org\x1b[0m (<-try to click it!)       │',
-      ' └────────────────────────────────────────────────────────────────────────────┘',
-      ''
-    ].join('\n\r');
+  
 
-    term.writeln(str);
-  </script>
+  <header style="margin-bottom: 3em;">
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid justify-content-center ">
+          <span class="navbar-brand clearfix ">
+            <img src="logo.svg" alt="" width="48" height="36" class="d-inline-block align-text-top" />
+            <strong> &nbsp &nbsp &nbsp &nbspWeb Terminal</strong>
+            
+          </span>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <div class="container">
+      <h1 style="text-align:center;color:green;">
+        GeeksforGeeks
+    </h1>
+      <form>
+          <div class="form-group">
+              <label for="">Enter Your Name:</label>
+              <input class="form-control"
+                     type="text"
+                     placeholder="Input Your Name Here">
+          </div>
+          <div class="form-group">
+              <button class="btn btn-success btn-lg float-right"
+                      type="submit">
+                   Submit
+              </button>
+          </div>
+      </form>
+  </div>
+  
+    <div class="container">
+      <div class="row">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+              content.</p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </body>
 
 </html>
