@@ -46,7 +46,7 @@ window (xterm.js) and create a websocket with the server, which relays the data 
 
 The program has been tested on Linux, WSL2, Raspberry Pi 3B (Debian), and MacOSX using Google Chrome, Firefox, and Safari.
 
-## An Screencast <sub>featuring an older version of web_terminal</sub>
+## An Screencast <sub>featuring an older version of WiTTY</sub>
 
 Here is a screencast for sshing into Raspberry Pi running 
 [pi-hole](https://pi-hole.net/) 
