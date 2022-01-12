@@ -56,7 +56,7 @@ func fillIndex(c *gin.Context) {
 }
 
 func main() {
-	fp, err := os.OpenFile("web_term.log", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	fp, err := os.OpenFile("witty.log", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 
 	if err == nil {
 		defer fp.Close()
@@ -95,11 +95,11 @@ func main() {
 
 		c.HTML(http.StatusOK, "term.html", gin.H{
 			"title": "interactive terminal",
-			"path":  "/ws_do",
+			"path":  "/ws_new",
 		})
 	})
 
-	rt.GET("/ws_do", func(c *gin.Context) {
+	rt.GET("/ws_new", func(c *gin.Context) {
 		term_conn.ConnectTerm(c.Writer, c.Request, false, "", cmdToExec)
 	})
 
