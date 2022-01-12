@@ -31,6 +31,30 @@ func checkOrigin(r *http.Request) bool {
 	return (host != nil) && (*host == h.Host)
 }
 
+type InteractiveSession struct {
+	Ip   string
+	Cmd  string
+	Name string
+}
+
+func fillIndex(c *gin.Context) {
+	var players []InteractiveSession
+
+	term_conn.ForEachSession(func(tc *term_conn.TermConn) {
+		players = append(players, InteractiveSession{
+			Name: tc.Name,
+			Ip:   tc.Ip,
+			Cmd:  cmdToExec[0],
+		})
+	})
+
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"title":   "Interactive terminal",
+		"path":    "/ws_do",
+		"players": players,
+	})
+}
+
 func main() {
 	fp, err := os.OpenFile("web_term.log", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 
@@ -56,10 +80,11 @@ func main() {
 	rt.SetTrustedProxies(nil)
 	rt.LoadHTMLGlob("./assets/*.html")
 
-	rt.GET("/view/*sname", func(c *gin.Context) {
+	rt.GET("/view/:sname", func(c *gin.Context) {
+		sname := c.Param("sname")
 		c.HTML(http.StatusOK, "term.html", gin.H{
 			"title": "Viewer terminal",
-			"path":  "/ws_view",
+			"path":  "/ws_view/" + sname,
 		})
 	})
 
@@ -75,11 +100,12 @@ func main() {
 	})
 
 	rt.GET("/ws_do", func(c *gin.Context) {
-		term_conn.ConnectTerm(c.Writer, c.Request, false, cmdToExec)
+		term_conn.ConnectTerm(c.Writer, c.Request, false, "", cmdToExec)
 	})
 
-	rt.GET("/ws_view", func(c *gin.Context) {
-		term_conn.ConnectTerm(c.Writer, c.Request, true, nil)
+	rt.GET("/ws_view/:sname", func(c *gin.Context) {
+		path := c.Param("sname")
+		term_conn.ConnectTerm(c.Writer, c.Request, true, path, nil)
 	})
 
 	// handle static files
@@ -87,11 +113,7 @@ func main() {
 
 	rt.GET("/", func(c *gin.Context) {
 		host = &c.Request.Host
-
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "Interactive terminal",
-			"path":  "/ws_do",
-		})
+		fillIndex(c)
 	})
 
 	term_conn.Init(checkOrigin)

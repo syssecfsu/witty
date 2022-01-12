@@ -21,7 +21,7 @@
           <img src="/assets/logo.svg" style="margin-left: 2em;margin-right: 1em;" height="24"
             class="d-inline-block align-text-top">
           Web-based Terminal Emulator
-          <a class="btn btn-primary btn-sm float-end" href="/new" role="button">New Session</a>
+          <a class="btn btn-primary btn-sm float-end" href="/new" target="_blank" role="button">New Session</a>
       </div>
     </nav>
   </header>
@@ -31,13 +31,17 @@
       <div class="card-deck row justify-content-center">
 
         <!-- repeat this for each interactive session -->
+        {{range .players}}
         <div class="card shadow-sm border-info  bg-light mb-3" style="width: 16rem; margin:1em;">
           <div class="card-body">
             <h5 class="card-title">Interactive session</h5>
-            <p class="card-text">From {{.ip}}, running {{.cmd}}</p>
-            <a class="btn btn-secondary btn-sm float-end" href="{{.url}}" role="button">View</a>
+            <p class="card-text">From <em>{{.Ip}}</em>, running <strong>{{.Cmd}}</strong>, session ID: <u>{{.Name}}</u>
+            </p>
+            <a class="btn btn-secondary btn-sm float-end" href="/view/{{.Name}}" target="_blank" role="button">View
+              Session</a>
           </div>
         </div>
+        {{end}}
 
       </div>
     </div>

@@ -21,12 +21,13 @@ func (reg *Registry) init() {
 	reg.players = make(map[string]*TermConn)
 }
 
-func (d *Registry) addPlayer(name string, tc *TermConn) {
+func (d *Registry) addPlayer(tc *TermConn) {
 	d.mtx.Lock()
-	if _, ok := d.players[name]; ok {
-		log.Println(name, "already exist in the dispatcher, skip registration")
+	if _, ok := d.players[tc.Name]; ok {
+		log.Println(tc.Name, "Already exist in the dispatcher, skip registration")
 	} else {
-		d.players[name] = tc
+		d.players[tc.Name] = tc
+		log.Println("Add interactive session to registry", tc.Name)
 	}
 	d.mtx.Unlock()
 }
@@ -38,6 +39,7 @@ func (d *Registry) removePlayer(name string) error {
 	if _, ok := d.players[name]; ok {
 		delete(d.players, name)
 		err = nil
+		log.Println("Removed interactive session to registry", name)
 	}
 
 	d.mtx.Unlock()
@@ -55,4 +57,12 @@ func (d *Registry) sendToPlayer(name string, ws *websocket.Conn) bool {
 
 	d.mtx.Unlock()
 	return ok
+}
+
+func ForEachSession(fp func(tc *TermConn)) {
+	registry.mtx.Lock()
+	for _, v := range registry.players {
+		fp(v)
+	}
+	registry.mtx.Unlock()
 }

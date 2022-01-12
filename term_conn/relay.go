@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/creack/pty"
+	"github.com/dchest/uniuri"
 	"github.com/gorilla/websocket"
 )
 
@@ -29,9 +30,6 @@ const (
 
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
-
-	// Time to wait before force close on connection.
-	closeGracePeriod = 10 * time.Second
 )
 
 var upgrader = websocket.Upgrader{
@@ -45,10 +43,11 @@ var upgrader = websocket.Upgrader{
 // TermConn represents the connected websocket and pty.
 // if isViewer is true
 type TermConn struct {
-	ws   *websocket.Conn
-	name string
+	Name string
+	Ip   string
 
 	// only valid for doers
+	ws       *websocket.Conn
 	ptmx     *os.File             // the pty that runs the command
 	cmd      *exec.Cmd            // represents the process, we need it to terminate the process
 	vchan    chan *websocket.Conn // channel to receive viewers
@@ -259,9 +258,9 @@ out:
 
 // this function should be executed by the main goroutine for the connection
 func (tc *TermConn) release() {
-	log.Println("Releasing terminal connection", tc.name)
+	log.Println("Releasing terminal connection", tc.Name)
 
-	registry.removePlayer(tc.name)
+	registry.removePlayer(tc.Name)
 
 	if tc.ptmx != nil {
 		// cleanup the pty and its related process
@@ -306,7 +305,8 @@ func handlePlayer(w http.ResponseWriter, r *http.Request, cmdline []string) {
 
 	tc := TermConn{
 		ws:   ws,
-		name: "main",
+		Name: uniuri.New(),
+		Ip:   ws.RemoteAddr().String(),
 	}
 
 	defer tc.release()
@@ -321,7 +321,7 @@ func handlePlayer(w http.ResponseWriter, r *http.Request, cmdline []string) {
 		return
 	}
 
-	registry.addPlayer("main", &tc)
+	registry.addPlayer(&tc)
 
 	// main event loop to shovel data between ws and pty
 	// do not call ptyStdoutToWs in this goroutine, otherwise
@@ -339,7 +339,7 @@ func handlePlayer(w http.ResponseWriter, r *http.Request, cmdline []string) {
 }
 
 // handle websockets
-func handleViewer(w http.ResponseWriter, r *http.Request) {
+func handleViewer(w http.ResponseWriter, r *http.Request, path string) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
@@ -348,17 +348,17 @@ func handleViewer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("\n\nCreated the websocket")
-	if !registry.sendToPlayer("main", ws) {
+	if !registry.sendToPlayer(path, ws) {
 		log.Println("Failed to send websocket to player, close it")
 		ws.Close()
 	}
 }
 
-func ConnectTerm(w http.ResponseWriter, r *http.Request, isViewer bool, cmdline []string) {
+func ConnectTerm(w http.ResponseWriter, r *http.Request, isViewer bool, path string, cmdline []string) {
 	if !isViewer {
 		handlePlayer(w, r, cmdline)
 	} else {
-		handleViewer(w, r)
+		handleViewer(w, r, path)
 	}
 }
 
