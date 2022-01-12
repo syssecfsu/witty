@@ -24,7 +24,7 @@ function createTerminal(path) {
   };
 
   const term = new Terminal({
-    fontFamily: `'Fira Code', monospace`,
+    fontFamily: `ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace`,
     fontSize: 12,
     theme: baseTheme,
     convertEol: true,
