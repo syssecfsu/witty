@@ -38,11 +38,11 @@
     term = createTerminal("{{.path}}");
     // print something to test output and scroll
     var str = [
-      ' ┌────────────────────────────────────────────────────────────────────────────┐',
-      ' │            Powered by \u001b[32;1mGo, Gin, websocket, pty, and https://xtermjs.org\x1b[0m     │',
-      ' └────────────────────────────────────────────────────────────────────────────┘',
+      ' ┌────────────────────────────────────────────────────────────────────────────┐\n',
+      ' │            Powered by \u001b[32;1mGo, Gin, websocket, pty, and https://xtermjs.org\x1b[0m     │\n',
+      ' └────────────────────────────────────────────────────────────────────────────┘\n',
       ''
-    ].join('\n\r');
+    ].join('');
 
     term.writeln(str);
   </script>
