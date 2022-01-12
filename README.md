@@ -46,9 +46,9 @@ window (xterm.js) and create a websocket with the server, which relays the data 
 
 The program has been tested on Linux, WSL2, Raspberry Pi 3B (Debian), and MacOSX using Google Chrome, Firefox, and Safari.
 
-## Known bug
+## Known issue
 
-WiTTY has some display/encoding issues on macOS with Firefox, especially for zsh. Safari works fine though.
+WiTTY might have some display/encoding issues on macOS with Firefox, especially for zsh. Safari works fine though.
 
 ## An Screencast <sub>featuring an older version of WiTTY</sub>
 
