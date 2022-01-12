@@ -7,10 +7,10 @@ ___AGAIN, Do NOT run this in an untrusted network. You will expose your
 shell to anyone that can access your network and Do NOT leave
 the server running.___
 
-This program is written in the go programming language, using the 
-Gin web framework, gorilla/websocket, pty, and xterm.js!
+This program is written in the [go programming language](https://go.dev/), using the 
+[Gin web framework](https://github.com/gin-gonic/gin), [gorilla/websocket](https://github.com/gorilla/websocket), [pty](https://github.com/creack/pty), and the wonderful [xterm.js](https://xtermjs.org/)!
 The workflow is simple, the client will initiate a terminal 
-window (xterm.js) and create a websocket with the server, which relays the data between pty and xterm.
+window (xterm.js) and create a websocket with the server, which relays the data between pty and xterm. You can customize the look and feel of the HTML pages by editing files under the ```assets``` directory.
 
 
 ## Installation
@@ -46,7 +46,7 @@ window (xterm.js) and create a websocket with the server, which relays the data 
 
 The program has been tested on Linux, WSL2, Raspberry Pi 3B (Debian), and MacOSX using Google Chrome, Firefox, and Safari.
 
-## An Screencast featuring older version of web_terminal
+## An Screencast <sub>featuring an older version of web_terminal</sub>
 
 Here is a screencast for sshing into Raspberry Pi running 
 [pi-hole](https://pi-hole.net/) 
