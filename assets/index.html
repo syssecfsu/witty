@@ -1,46 +1,51 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Fira+Sans&display=swap" rel="stylesheet">
+  <title>Web Terminal</title>
 
-  <script src="xterm.js"></script>
-  <script src="xterm-addon-attach.js"></script>
-  <script src="xterm-addon-fit.js"></script>
-  <script src="xterm-addon-web-links.js"></script>
-
-  <script src="main.js"></script>
-
-  <link rel="stylesheet" href="xterm.css" />
-  <link rel="stylesheet" href="main.css" />
-
-  <title>Websocket Terminal</title>
-</head>
+  <!-- Bootstrap core CSS -->
+  <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/main.css" rel="stylesheet">
 
 <body>
-  <h2>Web Terminal</h2>
-  <div id="terminal">
-    <div id="terminal_view"></div>
-  </div>
-  <script>
-    term = createTerminal();
-    // print something to test output and scroll
-    var str = [
-      ' ┌────────────────────────────────────────────────────────────────────────────┐',
-      ' │  \x1b[32mXterm.js\x1b[0m is the frontend component that powers many terminals including,  │',
-      ' │                               \x1b[3mVS Code\x1b[0m, \x1b[3mHyper\x1b[0m and \x1b[3mTheia\x1b[0m!                    │',
-      ' │                                                                            │',
-      ' │                             \x1b[34mhttps://xtermjs.org\x1b[0m (<-try to click it!)       │',
-      ' └────────────────────────────────────────────────────────────────────────────┘',
-      ''
-    ].join('\n\r');
+  <header>
+    <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
+      <div class="container-fluid">
+        <a class="navbar-brand">
+          <img src="/assets/logo.svg" style="margin-left: 2em;margin-right: 1em;" height="24"
+            class="d-inline-block align-text-top">
+          Web-based Terminal Emulator
+          <a class="btn btn-primary btn-sm float-end" href="/new" target="_blank" role="button">New Session</a>
+      </div>
+    </nav>
+  </header>
 
-    term.writeln(str);
-  </script>
+  <main>
+    <div class="container" style="margin-top:1em;">
+      <div class="card-deck row justify-content-center">
+
+        <!-- repeat this for each interactive session -->
+        {{range .players}}
+        <div class="card shadow-sm border-info  bg-light mb-3" style="width: 16rem; margin:1em;">
+          <div class="card-body">
+            <h5 class="card-title">Interactive session</h5>
+            <p class="card-text">From <em>{{.Ip}}</em>, running <strong>{{.Cmd}}</strong>, session ID: <u>{{.Name}}</u>
+            </p>
+            <a class="btn btn-secondary btn-sm float-end" href="/view/{{.Name}}" target="_blank" role="button">View
+              Session</a>
+          </div>
+        </div>
+        {{end}}
+
+      </div>
+    </div>
+  </main>
 </body>
 
 </html>
