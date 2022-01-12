@@ -46,7 +46,6 @@ type TermConn struct {
 	Name string
 	Ip   string
 
-	// only valid for doers
 	ws       *websocket.Conn
 	ptmx     *os.File             // the pty that runs the command
 	cmd      *exec.Cmd            // represents the process, we need it to terminate the process
