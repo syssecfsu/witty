@@ -8,7 +8,7 @@
   <meta name="author" content="">
 
   <!-- automatically refresh the page every 30 seconds -->
-  <meta http-equiv="refresh" content="30"> 
+  <meta http-equiv="refresh" content="20">
 
   <title>Web Terminal</title>
 
@@ -20,13 +20,15 @@
   <header>
     <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
       <div class="container-fluid">
-        <a class="navbar-brand">
-          <img src="/assets/logo.svg" style="margin-left: 2em;margin-right: 1em;" height="24"
+        <a class="navbar-brand" href="https://github.com/syssecfsu/witty" target="_blank">
+          <img src="/assets/logo.svg" style="margin-left: 2rem;margin-right: 0.5rem;" height="32"
             class="d-inline-block align-text-top">
           WiTTY: Web-based interactive TTY
-          <a class="btn btn-primary btn-sm float-end" href="/new"
-            onClick="setTimeout(function(){window.location.reload()}, 3000);" target="_blank" role="button">New
-            Session</a>
+        </a>
+        <a class="btn btn-primary btn-sm float-end" href="/new"
+          onClick="setTimeout(function(){window.location.reload()}, 3000);" target="_blank" role="button">
+          New Session
+        </a>
       </div>
     </nav>
   </header>
