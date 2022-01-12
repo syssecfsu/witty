@@ -231,7 +231,7 @@ out:
 			}
 
 		case viewer := <-tc.vchan:
-			log.Println("Received viewer")
+			log.Println("Received viewer", viewer.RemoteAddr().String() )
 			viewers = append(viewers, viewer)
 
 		case <-tc.ws_done:
