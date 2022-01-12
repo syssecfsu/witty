@@ -309,7 +309,7 @@ func handlePlayer(w http.ResponseWriter, r *http.Request, cmdline []string) {
 	}
 
 	defer tc.release()
-	log.Println("\n\nCreated the websocket")
+	log.Println("Created the websocket to", ws.RemoteAddr().String())
 
 	tc.ws_done = make(chan struct{})
 	tc.pty_done = make(chan struct{})
@@ -346,7 +346,7 @@ func handleViewer(w http.ResponseWriter, r *http.Request, path string) {
 		return
 	}
 
-	log.Println("\n\nCreated the websocket")
+	log.Println("Created the websocket to", ws.RemoteAddr().String())
 	if !registry.sendToPlayer(path, ws) {
 		log.Println("Failed to send websocket to player, close it")
 		ws.Close()
