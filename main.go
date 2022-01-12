@@ -94,7 +94,7 @@ func main() {
 		}
 
 		c.HTML(http.StatusOK, "term.html", gin.H{
-			"title": "Interactive terminal",
+			"title": "interactive terminal",
 			"path":  "/ws_do",
 		})
 	})
