@@ -1,5 +1,5 @@
 # WiTTY: Web-based interactive TTY
-This program allows you to use terminal in the browser. Simply run the program and give it the command to execute when users connect via the browser. ___Interestingly___, it allows others to view your interactive sessions as well. This could be useful to provide remote support and/or help. You can use the program to run any command line programs, such as ```bash```, ```htop```, ```vi```, ```ssh```. This following screenshot shows that six interactive session running ```zsh``` on macOS Monterey. <img src="https://github.com/syssecfsu/web_terminal/blob/master/extra/main.png?raw=true" width="800px">
+This program allows you to use terminal in the browser. Simply run the program and give it the command to execute when users connect via the browser. ___Interestingly___, it allows others to view your interactive sessions as well. This could be useful to provide remote support and/or help. You can use the program to run any command line programs, such as ```bash```, ```htop```, ```vi```, ```ssh```. This following screenshot shows that six interactive session running ```zsh``` on macOS Monterey. <img src="https://github.com/syssecfsu/witty/blob/master/extra/main.png?raw=true" width="800px">
 
 To use the program, you need to provide a TLS cert. You can request a free [Let's Encrypt](https://letsencrypt.org/) cert or use a self-signed cert. The program currently does not support user authentication. Therefore, do not run it in untrusted networks or leave it running. A probably safe use of the program is to run ```ssh```. Please ensure that you do not automatically login to the ssh server (e.g., via key authentication).
 
@@ -18,7 +18,7 @@ window (xterm.js) and create a websocket with the server, which relays the data 
 1. Install the [go](https://go.dev/) compiler.
 2. Download the release and unzip it, or clone the repo
    
-   ```git clone https://github.com/syssecfsu/web_terminal.git```
+   ```git clone https://github.com/syssecfsu/witty.git```
 
 3. Go to the ```tls``` directory and create a self-signed cert
    
@@ -36,9 +36,9 @@ window (xterm.js) and create a websocket with the server, which relays the data 
 
 5. Start the server and give it the command to run. The server listens on 8080, for example:
    
-   ```./web_terminal htop``` or
+   ```./witty htop``` or
 
-   ```./web_terminal ssh <your_server_ip> -l <user_name>```
+   ```./witty ssh <your_server_ip> -l <user_name>```
 
 6. Connect to the server, for example
 
@@ -50,7 +50,7 @@ The program has been tested on Linux, WSL2, Raspberry Pi 3B (Debian), and MacOSX
 
 Here is a screencast for sshing into Raspberry Pi running 
 [pi-hole](https://pi-hole.net/) 
-(```./web_terminal ssh 192.168.1.2 -l pi```,
-web_terminal runs in a WSL2 VM on Windows):
+(```./witty ssh 192.168.1.2 -l pi```,
+WiTTY runs in a WSL2 VM on Windows):
 
-<img src="https://github.com/syssecfsu/web_terminal/blob/master/extra/screencast.gif?raw=true" width="800px">
+<img src="https://github.com/syssecfsu/witty/blob/master/extra/screencast.gif?raw=true" width="800px">

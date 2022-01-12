@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/syssecfsu/web_terminal/term_conn"
+	"github.com/syssecfsu/witty/term_conn"
 )
 
 // command line options
