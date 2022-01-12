@@ -50,7 +50,6 @@ func fillIndex(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title":   "interactive terminal",
-		"path":    "/ws_new",
 		"players": players,
 	})
 }
