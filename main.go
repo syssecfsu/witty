@@ -49,7 +49,7 @@ func fillIndex(c *gin.Context) {
 	})
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title":   "Interactive terminal",
+		"title":   "interactive terminal",
 		"path":    "/ws_do",
 		"players": players,
 	})
@@ -83,7 +83,7 @@ func main() {
 	rt.GET("/view/:sname", func(c *gin.Context) {
 		sname := c.Param("sname")
 		c.HTML(http.StatusOK, "term.html", gin.H{
-			"title": "Viewer terminal",
+			"title": "viewer terminal",
 			"path":  "/ws_view/" + sname,
 		})
 	})
