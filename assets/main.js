@@ -32,7 +32,7 @@ function createTerminal(path) {
   });
 
   term.open(document.getElementById('terminal_view'));
-  term.resize(122, 37);
+  term.resize(124, 37);
 
   const weblinksAddon = new WebLinksAddon.WebLinksAddon();
   term.loadAddon(weblinksAddon);
@@ -45,6 +45,7 @@ function createTerminal(path) {
   // create the websocket and connect to the server
   const ws_uri = "wss://" + window.location.host + path;
   const socket = new WebSocket(ws_uri);
+  socket.binaryType = "arraybuffer";
   const attachAddon = new AttachAddon.AttachAddon(socket);
   term.loadAddon(attachAddon);
 

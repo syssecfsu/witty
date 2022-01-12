@@ -1,14 +1,14 @@
 #terminal {
     display: flex;
     justify-content: center;
-    margin: 20px 0 50px;
+    margin: 10px 0 20px;
 }
 
 #terminal #terminal_view {
     padding: 10px 20px;
     border-radius: 6px;
     background-color: #282a36;
-    max-width: 860px;
+    max-width: 880px;
 }
 
 .xterm-viewport.xterm-viewport {

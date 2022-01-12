@@ -209,7 +209,7 @@ out:
 			// We could add ws to viewers as well (then we can use io.MultiWriter),
 			// but we want to handle errors differently
 			tc.ws.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := tc.ws.WriteMessage(websocket.TextMessage, buf); err != nil {
+			if err := tc.ws.WriteMessage(websocket.BinaryMessage, buf); err != nil {
 				log.Println("Failed to write message: ", err)
 				break out
 			}
@@ -222,7 +222,7 @@ out:
 
 				// if the viewer exits, we will just ignore the error
 				w.SetWriteDeadline(time.Now().Add(viewWait))
-				if err := w.WriteMessage(websocket.TextMessage, buf); err != nil {
+				if err := w.WriteMessage(websocket.BinaryMessage, buf); err != nil {
 					log.Println("Failed to write message to viewer: ", err)
 
 					viewers[i] = nil
