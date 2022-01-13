@@ -4,10 +4,6 @@
 <head>
   <meta charset="UTF-8" />
 
-<!--   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Fira+Sans&display=swap" rel="stylesheet"> -->
-
   <script src="/assets/external/xterm.js"></script>
   <script src="/assets/external/xterm-addon-attach.js"></script>
   <script src="/assets/external/xterm-addon-fit.js"></script>
@@ -16,17 +12,26 @@
   <script src="/assets/main.js"></script>
 
   <link rel="stylesheet" href="/assets/external/xterm.css" />
+  <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/main.css" />
 
-  <title>WiTTY: {{.title}}</title>
+  <title>{{.title}}</title>
 </head>
 
 <body>
-  <div class="banner">
-    <div class="banner-content">
-      WiTTY: {{.title}}
-    </div>
-  </div>
+  <header>
+    <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
+      <div class="container-fluid">
+        <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
+          <img src="/assets/logo.svg" style="margin-right: 0.5rem;" height="28"
+            class="d-inline-block align-text-top">
+          {{.title}}
+        </a>
+        <!-- <a class="btn btn-primary btn-sm float-end" href="/new" role="button">New Session</a> -->
+      </div>
+    </nav>
+  </header>
+
 
   <div style="margin-top: 5em;">
     <div id="terminal">

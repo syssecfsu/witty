@@ -27,25 +27,9 @@
     background-color: #ffffff20;
 }
 
-.banner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #0b0b33;
-    width: 100%;
-}
-
-.banner-content {
-    font-family: sans-serif;
-    font-size: 22px;
-    padding: 0.5rem;
-    color: #ffffffff;
-    text-align: center;
-}
-
 .navbar-xs .navbar-brand {
     padding: 0px 12px;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 .navbar-xs .navbar-nav>li>a {
