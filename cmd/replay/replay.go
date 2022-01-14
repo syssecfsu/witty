@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -38,15 +37,11 @@ func main() {
 		log.Fatalln("Failed to create terminal")
 	}
 
-	w, h, err := term.GetSize(int(os.Stdout.Fd()))
+	w, h, _ := term.GetSize(int(os.Stdout.Fd()))
 
 	if (w != 120) || (h != 36) {
-		fmt.Println("Set terminal window to 120x36")
-		os.Stdout.WriteString(`\e[8;50;100t`)
+		log.Fatalln("Set terminal window to 120x36 before continue")
 	}
-	/* if err := term.SetSize(120, 36); err != nil {
-		log.Println("Failed to set terminal size", err)
-	} */
 
 	decoder := json.NewDecoder(fp)
 
