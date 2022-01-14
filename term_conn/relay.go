@@ -2,15 +2,16 @@
 package term_conn
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"sync"
 	"time"
 
 	"github.com/creack/pty"
-	"github.com/dchest/uniuri"
 	"github.com/gorilla/websocket"
 )
 
@@ -30,6 +31,9 @@ const (
 
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
+
+	recordCmd = 1
+	stopCmd   = 0
 )
 
 var upgrader = websocket.Upgrader{
@@ -46,12 +50,20 @@ type TermConn struct {
 	Name string
 	Ip   string
 
-	ws       *websocket.Conn
-	ptmx     *os.File             // the pty that runs the command
-	cmd      *exec.Cmd            // represents the process, we need it to terminate the process
-	vchan    chan *websocket.Conn // channel to receive viewers
-	ws_done  chan struct{}        // ws is closed, only close this chan in ws reader
-	pty_done chan struct{}        // pty is closed, close this chan in pty reader
+	ws          *websocket.Conn
+	ptmx        *os.File             // the pty that runs the command
+	record      *os.File             // record session
+	lastRecTime time.Time            // last time a record is written
+	cmd         *exec.Cmd            // represents the process, we need it to terminate the process
+	viewChan    chan *websocket.Conn // channel to receive viewers
+	recordChan  chan int             // channel to start/stop recording
+	ws_done     chan struct{}        // ws is closed, only close this chan in ws reader
+	pty_done    chan struct{}        // pty is closed, close this chan in pty reader
+}
+
+type writeRecord struct {
+	Dur  time.Duration `json:"Duration"`
+	Data []byte        `json:"Data"`
 }
 
 func (tc *TermConn) createPty(cmdline []string) error {
@@ -230,7 +242,37 @@ out:
 				}
 			}
 
-		case viewer := <-tc.vchan:
+			// Do we need to record the session?
+			if tc.record != nil {
+				jbuf, err := json.Marshal(writeRecord{Dur: time.Since(tc.lastRecTime), Data: buf})
+				if err != nil {
+					log.Println("Failed to marshal record", err)
+				} else {
+					tc.record.Write(jbuf)
+				}
+
+				tc.lastRecTime = time.Now()
+			}
+
+		case cmd := <-tc.recordChan:
+			var err error
+			if cmd == recordCmd {
+				// use the session ID and current as file name
+				fname := "./records/" + tc.Name + "_" + strconv.FormatInt(time.Now().Unix(), 16) + ".rec"
+
+				tc.record, err = os.OpenFile(fname, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+				if err != nil {
+					log.Println("Failed to create record file", fname, err)
+					tc.record = nil
+				}
+
+				tc.lastRecTime = time.Now()
+			} else {
+				tc.record.Close()
+				tc.record = nil
+			}
+
+		case viewer := <-tc.viewChan:
 			log.Println("Received viewer", viewer.RemoteAddr().String())
 			viewers = append(viewers, viewer)
 
@@ -287,14 +329,15 @@ func (tc *TermConn) release() {
 			log.Printf("Failed to wait for shell process(%v): %v", proc.Pid, err)
 		}
 
-		close(tc.vchan)
+		close(tc.viewChan)
+		close(tc.recordChan)
 	}
 
 	tc.ws.Close()
 }
 
 // handle websockets
-func handlePlayer(w http.ResponseWriter, r *http.Request, cmdline []string) {
+func handlePlayer(w http.ResponseWriter, r *http.Request, name string, cmdline []string) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
@@ -304,7 +347,7 @@ func handlePlayer(w http.ResponseWriter, r *http.Request, cmdline []string) {
 
 	tc := TermConn{
 		ws:   ws,
-		Name: uniuri.New(),
+		Name: name,
 		Ip:   ws.RemoteAddr().String(),
 	}
 
@@ -313,7 +356,8 @@ func handlePlayer(w http.ResponseWriter, r *http.Request, cmdline []string) {
 
 	tc.ws_done = make(chan struct{})
 	tc.pty_done = make(chan struct{})
-	tc.vchan = make(chan *websocket.Conn)
+	tc.viewChan = make(chan *websocket.Conn)
+	tc.recordChan = make(chan int)
 
 	if err := tc.createPty(cmdline); err != nil {
 		log.Println("Failed to create PTY: ", err)
@@ -353,15 +397,23 @@ func handleViewer(w http.ResponseWriter, r *http.Request, path string) {
 	}
 }
 
-func ConnectTerm(w http.ResponseWriter, r *http.Request, isViewer bool, path string, cmdline []string) {
+func ConnectTerm(w http.ResponseWriter, r *http.Request, isViewer bool, name string, cmdline []string) {
 	if !isViewer {
-		handlePlayer(w, r, cmdline)
+		handlePlayer(w, r, name, cmdline)
 	} else {
-		handleViewer(w, r, path)
+		handleViewer(w, r, name)
 	}
 }
 
 func Init(checkOrigin func(r *http.Request) bool) {
 	upgrader.CheckOrigin = checkOrigin
 	registry.init()
+}
+
+func StartRecord(id string) {
+	registry.recordSession(id, recordCmd)
+}
+
+func StopRecord(id string) {
+	registry.recordSession(id, stopCmd)
 }

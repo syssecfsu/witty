@@ -52,7 +52,20 @@ func (d *Registry) sendToPlayer(name string, ws *websocket.Conn) bool {
 	tc, ok := d.players[name]
 
 	if ok {
-		tc.vchan <- ws
+		tc.viewChan <- ws
+	}
+
+	d.mtx.Unlock()
+	return ok
+}
+
+// Send a command to the session to start, stop recording
+func (d *Registry) recordSession(id string, cmd int) bool {
+	d.mtx.Lock()
+	tc, ok := d.players[id]
+
+	if ok {
+		tc.recordChan <- cmd
 	}
 
 	d.mtx.Unlock()

@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 
+	"github.com/dchest/uniuri"
 	"github.com/gin-gonic/gin"
 	"github.com/syssecfsu/witty/term_conn"
 )
@@ -32,9 +33,9 @@ func checkOrigin(r *http.Request) bool {
 }
 
 type InteractiveSession struct {
-	Ip   string
-	Cmd  string
-	Name string
+	Ip  string
+	Cmd string
+	Id  string
 }
 
 func fillIndex(c *gin.Context) {
@@ -42,9 +43,9 @@ func fillIndex(c *gin.Context) {
 
 	term_conn.ForEachSession(func(tc *term_conn.TermConn) {
 		players = append(players, InteractiveSession{
-			Name: tc.Name,
-			Ip:   tc.Ip,
-			Cmd:  cmdToExec[0],
+			Id:  tc.Name,
+			Ip:  tc.Ip,
+			Cmd: cmdToExec[0],
 		})
 	})
 
@@ -79,41 +80,59 @@ func main() {
 	rt.SetTrustedProxies(nil)
 	rt.LoadHTMLGlob("./assets/*.html")
 
-	rt.GET("/view/:sname", func(c *gin.Context) {
-		sname := c.Param("sname")
-		c.HTML(http.StatusOK, "term.html", gin.H{
-			"title": "viewer terminal",
-			"path":  "/ws_view/" + sname,
-		})
+	// Fill in the index page
+	rt.GET("/", func(c *gin.Context) {
+		host = &c.Request.Host
+		fillIndex(c)
 	})
 
+	// create a new interactive session
 	rt.GET("/new", func(c *gin.Context) {
 		if host == nil {
 			host = &c.Request.Host
 		}
 
+		id := uniuri.New()
+
 		c.HTML(http.StatusOK, "term.html", gin.H{
 			"title": "interactive terminal",
-			"path":  "/ws_new",
+			"path":  "/ws_new/" + id,
+			"id":    id,
 		})
 	})
 
-	rt.GET("/ws_new", func(c *gin.Context) {
-		term_conn.ConnectTerm(c.Writer, c.Request, false, "", cmdToExec)
+	rt.GET("/ws_new/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		term_conn.ConnectTerm(c.Writer, c.Request, false, id, cmdToExec)
 	})
 
-	rt.GET("/ws_view/:sname", func(c *gin.Context) {
-		path := c.Param("sname")
-		term_conn.ConnectTerm(c.Writer, c.Request, true, path, nil)
+	// create a viewer of an interactive session
+	rt.GET("/view/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		c.HTML(http.StatusOK, "term.html", gin.H{
+			"title": "viewer terminal",
+			"path":  "/ws_view/" + id,
+		})
+	})
+
+	rt.GET("/ws_view/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		term_conn.ConnectTerm(c.Writer, c.Request, true, id, nil)
+	})
+
+	// start/stop recording the session
+	rt.GET("/record/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		term_conn.StartRecord(id)
+	})
+
+	rt.GET("/stop/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		term_conn.StopRecord(id)
 	})
 
 	// handle static files
 	rt.Static("/assets", "./assets")
-
-	rt.GET("/", func(c *gin.Context) {
-		host = &c.Request.Host
-		fillIndex(c)
-	})
 
 	term_conn.Init(checkOrigin)
 
