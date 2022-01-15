@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+
+    <script src="/assets/external/xterm.js"></script>
+    <script src="/assets/external/xterm-addon-attach.js"></script>
+    <script src="/assets/external/xterm-addon-fit.js"></script>
+    <script src="/assets/external/xterm-addon-web-links.js"></script>
+
+    <script src="/assets/replay.js"></script>
+
+    <link rel="stylesheet" href="/assets/external/xterm.css" />
+    <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/main.css" />
+
+    <title>Replay</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
+            <div class="container-fluid">
+                <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
+                    <img src="/assets/logo.svg" style="margin-right: 0.5rem;" height="28"
+                        class="d-inline-block align-text-top">
+                    replay terminal
+                </a>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="d-flex flex-column  align-items-center" style="margin-top: 2rem;">
+        <div id="terminal">
+            <div id="terminal_view"></div>
+        </div>
+        <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-sm" style="margin-right: 3px;">
+                <img src="/assets/play.svg" id="play-btn" height="18px">
+            </button>
+            <div class="progress" id="replay-control" style="width: 906px;">
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%" aria-valuenow="25"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function Init() {
+            let term = createReplayTerminal();
+            var str = [
+                ' ┌────────────────────────────────────────────────────────────────────────────┐\n',
+                ' │                 \u001b[32;1mhttps://github.com/syssecfsu/witty\x1b[0m <- click it!            │\n',
+                ' └────────────────────────────────────────────────────────────────────────────┘\n',
+                ''
+            ].join('');
+
+            term.writeln(str);
+
+            // adjust the progress bar size to that of terminal
+            let vp = document.querySelector("#terminal")
+            let pbar = document.querySelector("#replay-control")
+            pbar.setAttribute("style", "width:" + (vp.offsetWidth - 32) + "px");
+
+            
+            document.getElementById("play-btn").src = "/assets/pause.svg";
+        }
+
+        Init()
+    </script>
+
+</body>
+
+</html>
