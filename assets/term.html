@@ -47,7 +47,7 @@
         btn.innerHTML = btn.value
         fetch("/record/{{.id}}")
       } else {
-        btn.value = "Record"; 
+        btn.value = "Record";
         btn.innerHTML = btn.value
         fetch("/stop/{{.id}}")
       }
@@ -58,12 +58,12 @@
       // print something to test output and scroll
       var str = [
         ' ┌────────────────────────────────────────────────────────────────────────────┐\n',
-        ' │                       Powered by \u001b[32;1mGo, Gin, websocket, pty, and xterm.js\x1b[0m     │\n',
+        ' │                 \u001b[32;1mhttps://github.com/syssecfsu/witty\x1b[0m <- click it!            │\n',
         ' └────────────────────────────────────────────────────────────────────────────┘\n',
         ''
       ].join('');
 
-      term.writeln(str);
+      term.writeln (str)
     }
 
     Init()

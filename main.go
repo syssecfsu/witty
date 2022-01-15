@@ -131,6 +131,13 @@ func main() {
 		term_conn.StopRecord(id)
 	})
 
+	// create a viewer of an interactive session
+	rt.GET("/replay/*id", func(c *gin.Context) {
+		id := c.Param("id")
+		log.Println("replay/ called with", id)
+		c.HTML(http.StatusOK, "replay.html", nil)
+	})
+
 	// handle static files
 	rt.Static("/assets", "./assets")
 

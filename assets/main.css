@@ -1,7 +1,7 @@
 #terminal {
     display: flex;
     justify-content: center;
-    margin: 10px 0 20px;
+    margin: 10px 0 10px;
 }
 
 #terminal #terminal_view {
