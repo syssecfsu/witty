@@ -249,6 +249,7 @@ out:
 					log.Println("Failed to marshal record", err)
 				} else {
 					tc.record.Write(jbuf)
+					tc.record.Write([]byte(",")) // write a deliminator
 				}
 
 				tc.lastRecTime = time.Now()
@@ -266,8 +267,17 @@ out:
 					tc.record = nil
 				}
 
+				tc.record.Write([]byte("[")) // write a [ for an array of json objs
 				tc.lastRecTime = time.Now()
 			} else {
+				fsinfo, err := tc.record.Stat()
+
+				if err == nil {
+					tc.record.Truncate(fsinfo.Size() - 1)
+					tc.record.Seek(0, 2) // truncate does not change read/write location
+					tc.record.Write([]byte("]"))
+				}
+
 				tc.record.Close()
 				tc.record = nil
 			}

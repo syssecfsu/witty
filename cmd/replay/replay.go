@@ -40,7 +40,7 @@ func main() {
 	w, h, _ := term.GetSize(int(os.Stdout.Fd()))
 
 	if (w != 120) || (h != 36) {
-		log.Fatalln("Set terminal window to 120x36 before continue")
+		log.Println("Set terminal window to 120x36 before continue")
 	}
 
 	decoder := json.NewDecoder(fp)
@@ -49,6 +49,10 @@ func main() {
 		log.Fatalln("Failed to create JSON decoder")
 	}
 
+	// To work with javascript decoder, we organize the file as
+	// an array of writeRecord. golang decode instead decode
+	// as individual record. Call decoder.Token to skip opening [
+	decoder.Token()
 	for decoder.More() {
 		var record writeRecord
 
@@ -60,4 +64,6 @@ func main() {
 		time.Sleep(record.Dur)
 		t.Write(record.Data)
 	}
+
+	t.Write([]byte("\n\n---end of replay---\n\n"))
 }

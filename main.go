@@ -140,6 +140,7 @@ func main() {
 
 	// handle static files
 	rt.Static("/assets", "./assets")
+	rt.Static("/records", "./records")
 
 	term_conn.Init(checkOrigin)
 
