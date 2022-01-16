@@ -8,11 +8,12 @@
   <meta name="author" content="">
 
   <!-- automatically refresh the page every 30 seconds -->
-  <meta http-equiv="refresh" content="30">
+  <!-- <meta http-equiv="refresh" content="30"> -->
 
   <title>Web Terminal</title>
 
   <!-- Bootstrap core CSS -->
+  <script src="/assets/external/bootstrap.min.js"></script>
   <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
   <link href="/assets/main.css" rel="stylesheet">
 
@@ -21,12 +22,11 @@
     <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
       <div class="container-fluid">
         <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
-          <img src="/assets/logo.svg" style="margin-right: 0.5rem;" height="32"
-            class="d-inline-block align-text-top">
+          <img src="/assets/logo.svg" style="margin-right: 0.5rem;" height="32" class="d-inline-block align-text-top">
           WiTTY: Web-based interactive TTY
         </a>
         <a class="btn btn-primary btn-sm float-end" href="/new"
-          onClick="setTimeout(function(){window.location.reload()}, 3000);" target="_blank" role="button">
+          onClick="setTimeout(function(){window.location.reload()}, 2000);" target="_blank" role="button">
           New Session
         </a>
       </div>
@@ -34,25 +34,81 @@
   </header>
 
   <main>
-    <div class="container" style="margin-top:1em;">
-      <div class="card-deck row justify-content-center">
+    <div class="container-fluid" style="margin-top:1em;">
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link border bg-light" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+            type="button" role="tab" aria-controls="nav-home" aria-selected="true">Live</button>
+          <button class="nav-link border active bg-light" id="nav-profile-tab" data-bs-toggle="tab"
+            data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+            aria-selected="false">Saved</button>
+        </div>
+      </nav>
 
-        <!-- repeat this for each interactive session -->
-        {{range .players}}
-        <div class="card shadow-sm border-info  bg-light mb-3" style="width: 16rem; margin:1em;">
-          <div class="card-body">
-            <h5 class="card-title">Interactive session</h5>
-            <p class="card-text">From <em>{{.Ip}}</em>, running <strong>{{.Cmd}}</strong>, session ID: <u>{{.Id}}</u>
-            </p>
-            <a class="btn btn-secondary btn-sm float-end" href="/view/{{.Id}}" target="_blank" role="button">View
-              Session</a>
+      <div class="tab-content bg-light" id="nav-tabContent">
+        <div class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+          <div class="card-deck row justify-content-center">
+
+            <!-- repeat this for each interactive session -->
+            {{range .players}}
+            <div class="card shadow-sm border-danger bg-white mb-3" style="width: 16rem; margin:1em;">
+              <div class="card-body">
+                <h5 class="card-title">Interactive session</h5>
+                <p class="card-text">From <em>{{.Ip}}</em>, running <strong>{{.Cmd}}</strong>, session ID:
+                  <u>{{.Id}}</u>
+                </p>
+                <a class="btn btn-outline-success btn-sm float-end" href="/view/{{.Id}}" target="_blank"
+                  role="button">View
+                  Session</a>
+              </div>
+            </div>
+            {{end}}
+
           </div>
         </div>
-        {{end}}
 
+        <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+          <div class="card-deck row justify-content-center">
+
+            <!-- repeat this for each recorded session -->
+            {{range .records}}
+            <div class="card shadow-sm border-info bg-light mb-3" style="width: 16rem; margin:1em;">
+              <div class="card-body">
+                <h5 class="card-title">Recorded session</h5>
+                <p class="card-text">File name: <u>{{.Fname}}</u>, file size: <em>{{.Fsize}}KB</em>, 
+                  recorded at <strong>{{.Time}}</strong>, duration: <mark>{{.Duration}}s</mark>,
+                </p>
+                <div class="btn-toolbar float-end" role="toolbar" aria-label="records buttons">
+                  <a class="btn btn-outline-success btn-sm m-1" href="/replay/{{.Fname}}" target="_blank" role="button">
+                    <img src="/assets/play.svg" height="18px">
+                  </a>
+                  <a class="btn btn-outline-success btn-sm m-1" href="/records/{{.Fname}}" role="button" download>
+                    <img src="/assets/download.svg" height="18px">
+                  </a>
+                  <button type="button" class="btn btn-outline-success btn-sm m-1" onclick="del_btn({{.Fname}})">
+                    <img src="/assets/delete.svg" height="18px">
+                  </button>
+                </div>
+              </div>
+            </div>
+            {{end}}
+
+          </div>
+        </div>
       </div>
     </div>
   </main>
+
+  <script>
+    function del_btn(path) {
+      fetch("/delete/" + path)
+      setTimeout(function () {
+        window.location.reload()
+      }, 800);
+    }
+  </script>
+
+
 </body>
 
 </html>

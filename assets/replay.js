@@ -112,13 +112,14 @@ async function replay_session(term, path, start, paused, prog, end) {
 
     // we will blast through the beginning of the session
     if (cur >= start) {
-      if (await sleep(item.Duration, paused) == true) {
+      // we are cheating a little bit here, we do not want to wait for too long
+      if (await sleep(Math.min(item.Duration, 1000), paused) == true) {
         return
       }
     }
 
     if (item.Duration >= total_dur / 100) {
-      prog(cur * 100 / total_dur)
+      prog(parseInt(cur * 100 / total_dur))
     }
 
     term.write(base64ToUint8array(item.Data))

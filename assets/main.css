@@ -36,3 +36,8 @@
     padding-top: 0px;
     padding-bottom: 0px;
 }
+
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}

@@ -61,7 +61,7 @@ type TermConn struct {
 	pty_done    chan struct{}        // pty is closed, close this chan in pty reader
 }
 
-type writeRecord struct {
+type WriteRecord struct {
 	Dur  time.Duration `json:"Duration"`
 	Data []byte        `json:"Data"`
 }
@@ -244,7 +244,7 @@ out:
 
 			// Do we need to record the session?
 			if tc.record != nil {
-				jbuf, err := json.Marshal(writeRecord{Dur: time.Since(tc.lastRecTime), Data: buf})
+				jbuf, err := json.Marshal(WriteRecord{Dur: time.Since(tc.lastRecTime), Data: buf})
 				if err != nil {
 					log.Println("Failed to marshal record", err)
 				} else {
@@ -341,6 +341,13 @@ func (tc *TermConn) release() {
 
 		close(tc.viewChan)
 		close(tc.recordChan)
+
+		if tc.record != nil {
+			// write a ] and close the file
+			tc.record.Write([]byte("]"))
+			tc.record.Close()
+			tc.record = nil
+		}
 	}
 
 	tc.ws.Close()
