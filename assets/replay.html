@@ -65,6 +65,10 @@
                     },
                     function (percent) {
                         rc.value = percent
+                    },
+                    function () {
+                        icon.src = "/assets/play.svg"
+                        rc.value = 0
                     })
             } else {
                 icon.src = "/assets/play.svg"

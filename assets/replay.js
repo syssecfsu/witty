@@ -54,18 +54,18 @@ function _sleep(ms) {
 // we could sleep for a long time
 // periodically check if we need to end replay. 
 // This is pretty ugly but the callback mess otherwise
-async function sleep(ms, end) {
+async function sleep(ms, paused) {
   var loop_cnt = parseInt(ms / 20) + 1
 
   for (i = 0; i < loop_cnt; i++) {
-    if (end()) {
-      return end()
+    if (paused()) {
+      return paused()
     }
 
     await _sleep(20)
   }
 
-  return end()
+  return paused()
 }
 // convert data to uint8array, we cannot convert it to string as 
 // it will mess up special characters
@@ -84,7 +84,7 @@ function base64ToUint8array(base64) {
 // term: xterm, path: session file to replay,
 // start: start position to replay in percentile, range 0-100
 // callback to update the progress bar
-async function replay_session(term, path, start, end, prog) {
+async function replay_session(term, path, start, paused, prog, end) {
   var session
 
   // read file from server
@@ -112,7 +112,7 @@ async function replay_session(term, path, start, end, prog) {
 
     // we will blast through the beginning of the session
     if (cur >= start) {
-      if (await sleep(item.Duration, end) == true) {
+      if (await sleep(item.Duration, paused) == true) {
         return
       }
     }
@@ -123,6 +123,8 @@ async function replay_session(term, path, start, end, prog) {
 
     term.write(base64ToUint8array(item.Data))
   }
+
+  end()
 }
 
 function Init() {
