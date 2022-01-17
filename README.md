@@ -34,7 +34,7 @@ window (xterm.js) and create a websocket with the server, which relays the data 
 
 ## Installation
 
-1. Install the [go](https://go.dev/) compiler.
+1. Install the [go](https://go.dev/) compiler. Make sure your have go 1.17 or higher. 
 2. Download the release and unzip it, or clone the repo
    
    ```git clone https://github.com/syssecfsu/witty.git```
