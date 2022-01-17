@@ -1,5 +1,24 @@
 # WiTTY: Web-based interactive TTY
-This program allows you to use terminal in the browser. Simply run the program and give it the command to execute when users connect via the browser. ___Interestingly___, it allows others to view your interactive sessions as well. This could be useful to provide remote support and/or help. You can use the program to run any command line programs, such as ```bash```, ```htop```, ```vi```, ```ssh```. This following screenshot shows that six interactive session running ```zsh``` on macOS Monterey. <img src="https://github.com/syssecfsu/witty/blob/master/extra/main.png?raw=true" width="800px">
+This program allows you to use terminal in the browser. Simply run the program and give it the command to execute when users connect via the browser. ___Interestingly___, it allows others to view your interactive sessions as well. This could be useful to provide remote support and/or help. You can use the program to run any command line programs, such as ```bash```, ```htop```, ```vi```, ```ssh```. This following screenshot shows that three interactive session running ```zsh``` on macOS Monterey. <img src="https://github.com/syssecfsu/witty/blob/master/extra/main.png?raw=true" width="800px">
+
+With WiTTY, you can also __record and replay your interactive sessions__. The following screenshot shows three recorded sessions. You can replay/download/delete them. 
+<img src="https://github.com/syssecfsu/witty/blob/master/extra/view.png?raw=true" width="800px">
+
+
+Here is a session, where we sshed into a Raspberry Pi running 
+[pi-hole](https://pi-hole.net/) 
+(```./witty ssh 192.168.1.2 -l pi```,
+WiTTY runs in a WSL2 VM on Windows) being replayed. You can play/pause the session.
+
+<img src="https://github.com/syssecfsu/witty/blob/master/extra/screencast.gif?raw=true" width="800px">
+
+<!-- 
+commands to create high quality gif from mkv/mp4 files
+ffmpeg -i replay.mkv -vf palettegen palette.png
+ffmpeg -i replay.mkv -i palette.png -lavfi paletteuse output.gif
+gifsicle -O3 .\output.gif -o replay.gif
+-->
+
 
 To use the program, you need to provide a TLS cert. You can request a free [Let's Encrypt](https://letsencrypt.org/) cert or use a self-signed cert. The program currently does not support user authentication. Therefore, do not run it in untrusted networks or leave it running. A probably safe use of the program is to run ```ssh```. Please ensure that you do not automatically login to the ssh server (e.g., via key authentication).
 
@@ -45,16 +64,3 @@ window (xterm.js) and create a websocket with the server, which relays the data 
    ```https://your_ip_address:8080```
 
 The program has been tested on Linux, WSL2, Raspberry Pi 3B (Debian), and MacOSX using Google Chrome, Firefox, and Safari.
-
-<!-- ## Known issue
-
-WiTTY might have some display/encoding issues on macOS with Firefox, especially for zsh. Safari works fine though. -->
-
-## An Screencast <sub>featuring an older version of WiTTY</sub>
-
-Here is a screencast for sshing into Raspberry Pi running 
-[pi-hole](https://pi-hole.net/) 
-(```./witty ssh 192.168.1.2 -l pi```,
-WiTTY runs in a WSL2 VM on Windows):
-
-<img src="https://github.com/syssecfsu/witty/blob/master/extra/screencast.gif?raw=true" width="800px">

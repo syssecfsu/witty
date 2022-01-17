@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+
+    <script src="/assets/external/xterm.js"></script>
+    <script src="/assets/external/xterm-addon-attach.js"></script>
+    <script src="/assets/external/xterm-addon-fit.js"></script>
+    <script src="/assets/external/xterm-addon-web-links.js"></script>
+
+    <script src="/assets/replay.js"></script>
+
+    <link rel="stylesheet" href="/assets/external/xterm.css" />
+    <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/main.css" />
+
+    <title>Replay</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
+            <div class="container-fluid">
+                <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
+                    <img src="/assets/logo.svg" style="margin-right: 0.5rem;" height="28"
+                        class="d-inline-block align-text-top">
+                    replay terminal
+                </a>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="d-flex flex-column  align-items-center" style="margin-top: 2rem;">
+        <div id="terminal">
+            <div id="terminal_view"></div>
+        </div>
+        <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-sm" style="margin-right: 3px;" onclick="playbtn()">
+                <img src="/assets/play.svg" id="play-btn" height="18px">
+            </button>
+            <input type="range" class="form-range" min="0" max="100" id="replay-control"
+                onchange="console.log(this.value)">
+        </div>
+    </div>
+
+    <script>
+        term = Init()
+
+        var rc = document.querySelector("#replay-control")
+        rc.value = 0
+
+        var icon = document.getElementById("play-btn")
+        var path = "/records/{{.fname}}"
+        var pause = false
+
+        function playbtn() {
+            if (icon.src.includes("play")) {
+                icon.src = "/assets/pause.svg"
+                pause = false
+                replay_session(term, path, rc.value,
+                    function () {
+                        return pause
+                    },
+                    function (percent) {
+                        rc.value = percent
+                    },
+                    function () {
+                        icon.src = "/assets/play.svg"
+                        rc.value = 0
+                    })
+            } else {
+                icon.src = "/assets/play.svg"
+                pause = true
+            }
+        }
+    </script>
+
+</body>
+
+</html>

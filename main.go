@@ -1,11 +1,16 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
+	"strings"
 
+	"github.com/dchest/uniuri"
 	"github.com/gin-gonic/gin"
 	"github.com/syssecfsu/witty/term_conn"
 )
@@ -32,25 +37,91 @@ func checkOrigin(r *http.Request) bool {
 }
 
 type InteractiveSession struct {
-	Ip   string
-	Cmd  string
-	Name string
+	Ip  string
+	Cmd string
+	Id  string
+}
+
+type RecordedSession struct {
+	Fname    string
+	Fsize    string
+	Duration string
+	Time     string
+}
+
+// how many seconds of the session
+func getDuration(fname string) int64 {
+	fp, err := os.Open("./records/" + fname)
+
+	if err != nil {
+		log.Println("Failed to open record file", err)
+		return 0
+	}
+
+	decoder := json.NewDecoder(fp)
+
+	if decoder == nil {
+		log.Println("Failed to create JSON decoder")
+		return 0
+	}
+
+	// To work with javascript decoder, we organize the file as
+	// an array of writeRecord. golang decode instead decode
+	// as individual record. Call decoder.Token to skip opening [
+	decoder.Token()
+
+	var dur int64 = 0
+
+	for decoder.More() {
+		var record term_conn.WriteRecord
+
+		if err := decoder.Decode(&record); err != nil {
+			log.Println("Failed to decode record", err)
+			continue
+		}
+
+		dur += record.Dur.Milliseconds()
+	}
+
+	return dur/1000 + 1
 }
 
 func fillIndex(c *gin.Context) {
 	var players []InteractiveSession
+	var records []RecordedSession
 
 	term_conn.ForEachSession(func(tc *term_conn.TermConn) {
 		players = append(players, InteractiveSession{
-			Name: tc.Name,
-			Ip:   tc.Ip,
-			Cmd:  cmdToExec[0],
+			Id:  tc.Name,
+			Ip:  tc.Ip,
+			Cmd: cmdToExec[0],
 		})
 	})
+
+	files, err := ioutil.ReadDir("./records/")
+	if err == nil {
+		for _, finfo := range files {
+			fname := finfo.Name()
+			if !strings.HasSuffix(fname, ".rec") {
+				continue
+			}
+			fsize := finfo.Size()
+			duration := getDuration(fname)
+
+			records = append(records,
+				RecordedSession{
+					Fname:    fname,
+					Fsize:    strconv.FormatInt(fsize, 10),
+					Duration: strconv.FormatInt(duration, 10),
+					Time:     finfo.ModTime().Format("Jan/2/2006, 15:04:05"),
+				})
+		}
+	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title":   "interactive terminal",
 		"players": players,
+		"records": records,
 	})
 }
 
@@ -79,41 +150,76 @@ func main() {
 	rt.SetTrustedProxies(nil)
 	rt.LoadHTMLGlob("./assets/*.html")
 
-	rt.GET("/view/:sname", func(c *gin.Context) {
-		sname := c.Param("sname")
-		c.HTML(http.StatusOK, "term.html", gin.H{
-			"title": "viewer terminal",
-			"path":  "/ws_view/" + sname,
-		})
+	// Fill in the index page
+	rt.GET("/", func(c *gin.Context) {
+		host = &c.Request.Host
+		fillIndex(c)
 	})
 
+	// create a new interactive session
 	rt.GET("/new", func(c *gin.Context) {
 		if host == nil {
 			host = &c.Request.Host
 		}
 
+		id := uniuri.New()
+
 		c.HTML(http.StatusOK, "term.html", gin.H{
 			"title": "interactive terminal",
-			"path":  "/ws_new",
+			"path":  "/ws_new/" + id,
+			"id":    id,
 		})
 	})
 
-	rt.GET("/ws_new", func(c *gin.Context) {
-		term_conn.ConnectTerm(c.Writer, c.Request, false, "", cmdToExec)
+	rt.GET("/ws_new/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		term_conn.ConnectTerm(c.Writer, c.Request, false, id, cmdToExec)
 	})
 
-	rt.GET("/ws_view/:sname", func(c *gin.Context) {
-		path := c.Param("sname")
-		term_conn.ConnectTerm(c.Writer, c.Request, true, path, nil)
+	// create a viewer of an interactive session
+	rt.GET("/view/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		c.HTML(http.StatusOK, "term.html", gin.H{
+			"title": "viewer terminal",
+			"path":  "/ws_view/" + id,
+		})
+	})
+
+	rt.GET("/ws_view/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		term_conn.ConnectTerm(c.Writer, c.Request, true, id, nil)
+	})
+
+	// start/stop recording the session
+	rt.GET("/record/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		term_conn.StartRecord(id)
+	})
+
+	rt.GET("/stop/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		term_conn.StopRecord(id)
+	})
+
+	// create a viewer of an interactive session
+	rt.GET("/replay/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		log.Println("replay/ called with", id)
+		c.HTML(http.StatusOK, "replay.html", gin.H{
+			"fname": id,
+		})
+	})
+
+	rt.GET("/delete/:fname", func(c *gin.Context) {
+		fname := c.Param("fname")
+		if err := os.Remove("./records/" + fname); err != nil {
+			log.Println("Failed to delete file,", err)
+		}
 	})
 
 	// handle static files
 	rt.Static("/assets", "./assets")
-
-	rt.GET("/", func(c *gin.Context) {
-		host = &c.Request.Host
-		fillIndex(c)
-	})
+	rt.Static("/records", "./records")
 
 	term_conn.Init(checkOrigin)
 
