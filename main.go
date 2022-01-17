@@ -105,7 +105,7 @@ func fillIndex(c *gin.Context) {
 			if !strings.HasSuffix(fname, ".rec") {
 				continue
 			}
-			fsize := finfo.Size()
+			fsize := finfo.Size() / 1024
 			duration := getDuration(fname)
 
 			records = append(records,
@@ -168,6 +168,7 @@ func main() {
 			"title": "interactive terminal",
 			"path":  "/ws_new/" + id,
 			"id":    id,
+			"logo":  "keyboard",
 		})
 	})
 
@@ -182,6 +183,8 @@ func main() {
 		c.HTML(http.StatusOK, "term.html", gin.H{
 			"title": "viewer terminal",
 			"path":  "/ws_view/" + id,
+			"id":    id,
+			"logo":  "view",
 		})
 	})
 
