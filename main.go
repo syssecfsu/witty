@@ -86,10 +86,7 @@ func getDuration(fname string) int64 {
 	return dur/1000 + 1
 }
 
-func fillIndex(c *gin.Context) {
-	var players []InteractiveSession
-	var records []RecordedSession
-
+func collectTabData(c *gin.Context) (players []InteractiveSession, records []RecordedSession) {
 	term_conn.ForEachSession(func(tc *term_conn.TermConn) {
 		players = append(players, InteractiveSession{
 			Id:  tc.Name,
@@ -99,6 +96,7 @@ func fillIndex(c *gin.Context) {
 	})
 
 	files, err := ioutil.ReadDir("./records/")
+
 	if err == nil {
 		for _, finfo := range files {
 			fname := finfo.Name()
@@ -118,11 +116,7 @@ func fillIndex(c *gin.Context) {
 		}
 	}
 
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title":   "interactive terminal",
-		"players": players,
-		"records": records,
-	})
+	return
 }
 
 func main() {
@@ -148,12 +142,44 @@ func main() {
 	rt := gin.Default()
 
 	rt.SetTrustedProxies(nil)
-	rt.LoadHTMLGlob("./assets/*.html")
+	rt.LoadHTMLGlob("./assets/template/*")
 
 	// Fill in the index page
 	rt.GET("/", func(c *gin.Context) {
 		host = &c.Request.Host
-		fillIndex(c)
+		players, records := collectTabData(c)
+
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"title":   "interactive terminal",
+			"players": players,
+			"records": records,
+		})
+	})
+
+	// to update the tabs of current interactive and saved sessions
+	rt.GET("/update/:active", func(c *gin.Context) {
+		var active0, active1 string
+
+		// setup which tab is active, it is hard to do in javascript at
+		// client side due to timing issues.
+		which := c.Param("active")
+		if which == "0" {
+			active0 = "active"
+			active1 = ""
+		} else {
+			active0 = ""
+			active1 = "active"
+		}
+
+		host = &c.Request.Host
+		players, records := collectTabData(c)
+
+		c.HTML(http.StatusOK, "tab.html", gin.H{
+			"players": players,
+			"records": records,
+			"active0": active0,
+			"active1": active1,
+		})
 	})
 
 	// create a new interactive session
