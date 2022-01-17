@@ -20,10 +20,10 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
+        <nav class="navbar navbar-light bg-light shadow-sm navbar-xs">
             <div class="container-fluid">
                 <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
-                    <img src="/assets/logo.svg" style="margin-right: 0.5rem;" height="28"
+                    <img src="/assets/img/view.svg" style="margin-right: 0.5rem;" height="32"
                         class="d-inline-block align-text-top">
                     replay terminal
                 </a>
@@ -38,7 +38,7 @@
         </div>
         <div class="d-flex align-items-center">
             <button type="button" class="btn btn-primary btn-sm" style="margin-right: 3px;" onclick="playbtn()">
-                <img src="/assets/play.svg" id="play-btn" height="18px">
+                <img src="/assets/img/play.svg" id="play-btn" height="18px">
             </button>
             <input type="range" class="form-range" min="0" max="100" id="replay-control"
                 onchange="console.log(this.value)">
@@ -57,7 +57,7 @@
 
         function playbtn() {
             if (icon.src.includes("play")) {
-                icon.src = "/assets/pause.svg"
+                icon.src = "/assets/img/pause.svg"
                 pause = false
                 replay_session(term, path, rc.value,
                     function () {
@@ -67,11 +67,11 @@
                         rc.value = percent
                     },
                     function () {
-                        icon.src = "/assets/play.svg"
+                        icon.src = "/assets/img/play.svg"
                         rc.value = 0
                     })
             } else {
-                icon.src = "/assets/play.svg"
+                icon.src = "/assets/img/play.svg"
                 pause = true
             }
         }

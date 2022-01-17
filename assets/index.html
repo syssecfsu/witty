@@ -23,7 +23,7 @@
     <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
       <div class="container-fluid">
         <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
-          <img src="/assets/logo.svg" style="margin-right: 0.5rem;" height="32" class="d-inline-block align-text-top">
+          <img src="/assets/img/logo.svg" style="margin-right: 0.5rem;" height="32" class="d-inline-block align-text-top">
           WiTTY: Web-based interactive TTY
         </a>
         <a class="btn btn-primary btn-sm float-end" href="/new"
@@ -59,8 +59,9 @@
                   <u>{{.Id}}</u>
                 </p>
                 <a class="btn btn-outline-success btn-sm float-end" href="/view/{{.Id}}" target="_blank"
-                  role="button">View
-                  Session</a>
+                  role="button">
+                  <img src="/assets/img/view.svg" height="18px">
+                </a>
               </div>
             </div>
             {{end}}
@@ -81,13 +82,13 @@
                 </p>
                 <div class="btn-toolbar float-end" role="toolbar" aria-label="records buttons">
                   <a class="btn btn-outline-success btn-sm m-1" href="/replay/{{.Fname}}" target="_blank" role="button">
-                    <img src="/assets/play.svg" height="18px">
+                    <img src="/assets/img/play.svg" height="18px">
                   </a>
                   <a class="btn btn-outline-success btn-sm m-1" href="/records/{{.Fname}}" role="button" download>
-                    <img src="/assets/download.svg" height="18px">
+                    <img src="/assets/img/download.svg" height="18px">
                   </a>
                   <button type="button" class="btn btn-outline-success btn-sm m-1" onclick="del_btn({{.Fname}})">
-                    <img src="/assets/delete.svg" height="18px">
+                    <img src="/assets/img/delete.svg" height="18px">
                   </button>
                 </div>
               </div>
