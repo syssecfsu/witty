@@ -10,7 +10,7 @@ Here is a session, where we sshed into a Raspberry Pi running
 (```./witty ssh 192.168.1.2 -l pi```,
 WiTTY runs in a WSL2 VM on Windows) being replayed. You can play/pause the session.
 
-<img src="https://github.com/syssecfsu/witty/blob/master/extra/screencast.gif?raw=true" width="800px">
+<img src="https://github.com/syssecfsu/witty/blob/master/extra/replay.gif?raw=true" width="800px">
 
 <!-- 
 commands to create high quality gif from mkv/mp4 files
