@@ -3,11 +3,11 @@ This program allows you to use terminal in the browser. Simply run the program a
 
 1. It allows others to **view onging interactive sessions**. This is useful for providing live remote support and/or help (only use this after user authentication is implemented). 
 
-A challenge of this use case is that our home networks are almost always behind NAT, making it diffcult to run WiTTY as a publicly accessible server. Security is also a concern. It is generally safer to use WiTTY in a trusted environment.
+   A challenge of this use case is that our home networks are almost always behind NAT, making it diffcult to run WiTTY as a publicly accessible server. Security is also a concern. It is generally safer to use WiTTY in a trusted environment.
 
 2. WiTTY allows users to **easily record, replay, and share console sessions** with just a few clicks. This make it a breeze to answer course-related questions, espeically with the source code. Instead of wall of text to describe their questions, students can just send a recorded session. 
 
-This repository contains a recorded session in the ```assets/extra``` directory ([M1NXZvHdvA8vSCKp_61e5d60f.rec](extra/M1NXZvHdvA8vSCKp_61e5d60f.rec)) that shows me upgrading pihole. Just put the file under the ```records``` directory, run the server, you should find the recording in the ```Saved Sessions``` tab. 
+   This repository contains a recorded session in the ```assets/extra``` directory ([M1NXZvHdvA8vSCKp_61e5d60f.rec](extra/M1NXZvHdvA8vSCKp_61e5d60f.rec)) that shows me upgrading pihole. Just put the file under the ```records``` directory, run the server, you should find the recording in the ```Saved Session``` tab. 
 
 3. More features are planned, including user authentication. Suggestions are welcome.  
 
