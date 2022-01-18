@@ -26,7 +26,8 @@ func main() {
 	left := flag.Args()
 
 	if len(left) != 1 {
-		log.Fatalln("Usage: replay -w/wait time <recordfile>")
+		fmt.Println("Usage: replay -w/wait time <recordfile>")
+		return
 	}
 
 	fp, err := os.Open(left[0])
