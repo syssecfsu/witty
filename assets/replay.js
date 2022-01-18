@@ -97,7 +97,7 @@ async function play_ctrl(term, session, start, total_dur, paused, shifted, prog)
     // we will blast through the beginning of the session
     if (cur >= start) {
       // we are cheating a little bit here, we do not want to wait for too long
-      exit = await sleep(Math.min(item.Duration, 800), paused)
+      exit = await sleep(Math.min(item.Duration, 1000), paused)
 
       if (exit) {
         return
