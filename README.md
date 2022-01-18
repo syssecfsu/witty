@@ -17,10 +17,10 @@ The following screenshot shows three recorded sessions. You can replay/download/
 <img src="extra/view.png" width="800px">
 
 
-Here is a session, where we sshed into a Raspberry Pi running 
-[pi-hole](https://pi-hole.net/) 
-(```./witty ssh 192.168.1.2 -l pi```,
-WiTTY runs in a WSL2 VM on Windows) being replayed. You can play/pause the session.
+Here is a recorded session, where we domonstrate how to use the command line replay utility (in ```cmd/replay```) to replay another recorded session that sshes into a Raspberry Pi running 
+[pi-hole](https://pi-hole.net/). You can pause and seek the replay.
+
+>The inception is strong with this one!
 
 <img src="extra/replay.gif?raw=true" width="800px">
 
