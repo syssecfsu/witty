@@ -43,6 +43,7 @@ This program is written in the [go programming language](https://go.dev/), using
 The workflow is simple, the client will initiate a terminal 
 window (xterm.js) and create a websocket with the server, which relays the data between pty and xterm. You can customize the look and feel of the HTML pages by editing files under the ```assets``` directory.
 
+Most icons were provided by [fontawesome](https://fontawesome.com/) under this [license](https://fontawesome.com/license).
 
 ## Installation
 
