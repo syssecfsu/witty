@@ -118,10 +118,7 @@ async function replay_session(term, path, start, paused, prog, end) {
       }
     }
 
-    if (item.Duration >= total_dur / 100) {
-      prog(parseInt(cur * 100 / total_dur))
-    }
-
+    prog(parseInt(cur * 100 / total_dur))
     term.write(base64ToUint8array(item.Data))
   }
 
