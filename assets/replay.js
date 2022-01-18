@@ -33,7 +33,7 @@ function createReplayTerminal() {
   });
 
   term.open(document.getElementById('terminal_view'));
-  term.resize(124, 37);
+  term.resize(120, 36);
 
   const weblinksAddon = new WebLinksAddon.WebLinksAddon();
   term.loadAddon(weblinksAddon);
