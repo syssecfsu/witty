@@ -80,12 +80,53 @@ function base64ToUint8array(base64) {
   return array;
 }
 
+async function play_ctrl(term, session, start, total_dur, paused, shifted, prog) {
+  var cur = 0
+  var new_pos = -1
+
+  start = parseInt(total_dur * start / 100)
+  term.reset()
+
+  for (const item of session) {
+    new_pos = shifted()
+
+    if (new_pos != -1) {
+      return new_pos
+    }
+
+    // we will blast through the beginning of the session
+    if (cur >= start) {
+      // we are cheating a little bit here, we do not want to wait for too long
+      exit = await sleep(Math.min(item.Duration, 800), paused)
+
+      if (exit) {
+        return
+      }
+    }
+
+    term.write(base64ToUint8array(item.Data))
+    cur += item.Duration
+
+    if (cur > start) {
+      prog(parseInt(cur * 100 / total_dur))
+    }
+  }
+
+  return -1
+}
 // replay session
 // term: xterm, path: session file to replay,
 // start: start position to replay in percentile, range 0-100
-// callback to update the progress bar
-async function replay_session(term, path, start, paused, prog, end) {
+// paused: callback whether to stop play
+// prog: callback to update the progress bar
+// shift: callback whether we should change position
+// end: callback when playback is finished
+async function replay_session(term, path, start, paused, shifted, prog, end) {
   var session
+  var total_dur = 0
+  var cur = 0
+  var new_pos = 0
+  var ret = 0
 
   // read file from server
   await fetch(path)
@@ -94,34 +135,24 @@ async function replay_session(term, path, start, paused, prog, end) {
       session = out
     })
 
-  var total_dur = 0
-  var cur = 0
-
   //calculate the total duration
   for (const item of session) {
     item.Duration = parseInt(item.Duration / 1000000)
     total_dur += item.Duration
   }
 
-  start = parseInt(total_dur * start / 100)
-  console.log("Total duration:", total_dur, "start replay on", start)
+  console.log("Total duration:", total_dur, "start replay on position", start)
 
-  term.reset()
-  for (const item of session) {
-    cur += item.Duration
-
-    // we will blast through the beginning of the session
-    if (cur >= start) {
-      // we are cheating a little bit here, we do not want to wait for too long
-      if (await sleep(Math.min(item.Duration, 1000), paused) == true) {
-        return
-      }
+  while (true) {
+    ret = await play_ctrl(term, session, start, total_dur, paused, shifted, prog)
+    if (ret == -1) {
+      break
     }
 
-    prog(parseInt(cur * 100 / total_dur))
-    term.write(base64ToUint8array(item.Data))
+    start = ret
   }
 
+  term.reset()
   end()
 }
 

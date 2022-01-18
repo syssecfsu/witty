@@ -41,7 +41,7 @@
                 <img src="/assets/img/play.svg" id="play-btn" height="18px">
             </button>
             <input type="range" class="form-range" min="0" max="100" id="replay-control"
-                onchange="console.log(this.value)">
+                onchange="clicked = this.value">
         </div>
     </div>
 
@@ -54,6 +54,7 @@
         var icon = document.getElementById("play-btn")
         var path = "/records/{{.fname}}"
         var pause = false
+        var clicked = -1
 
         function playbtn() {
             if (icon.src.includes("play")) {
@@ -62,6 +63,11 @@
                 replay_session(term, path, rc.value,
                     function () {
                         return pause
+                    },
+                    function(){
+                        var tmp = clicked
+                        clicked = -1
+                        return tmp
                     },
                     function (percent) {
                         rc.value = percent

@@ -156,6 +156,10 @@ func main() {
 		})
 	})
 
+	rt.GET("/favicon.ico", func(c *gin.Context) {
+		c.File("./assets/img/favicon.ico")
+	})
+
 	// to update the tabs of current interactive and saved sessions
 	rt.GET("/update/:active", func(c *gin.Context) {
 		var active0, active1 string
