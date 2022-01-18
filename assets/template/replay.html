@@ -40,8 +40,7 @@
             <button type="button" class="btn btn-primary btn-sm" style="margin-right: 3px;" onclick="playbtn()">
                 <img src="/assets/img/play.svg" id="play-btn" height="18px">
             </button>
-            <input type="range" class="form-range" min="0" max="100" id="replay-control"
-                onchange="clicked = this.value">
+            <input type="range" class="form-range" min="0" max="100" id="replay-control" onchange="seek(this.value)">
         </div>
     </div>
 
@@ -52,22 +51,25 @@
         rc.value = 0
 
         var icon = document.getElementById("play-btn")
-        var path = "/records/{{.fname}}"
         var pause = false
-        var clicked = -1
+
+        var records
+        var total_dur
+
+        // return values are not reliable with async functions
+        fetchAndParse("/records/{{.fname}}",
+            function (v1, v2) {
+                records = v1
+                total_dur = v2
+            })
 
         function playbtn() {
             if (icon.src.includes("play")) {
                 icon.src = "/assets/img/pause.svg"
                 pause = false
-                replay_session(term, path, rc.value,
+                replay_session(term, records, total_dur, rc.value,
                     function () {
                         return pause
-                    },
-                    function(){
-                        var tmp = clicked
-                        clicked = -1
-                        return tmp
                     },
                     function (percent) {
                         rc.value = percent
@@ -80,6 +82,15 @@
                 icon.src = "/assets/img/play.svg"
                 pause = true
             }
+        }
+
+        function seek(end) {
+            // pause the play if it is currently playing
+            if (!icon.src.includes("play")) {
+                playbtn()
+            }
+
+            forwardScreen(term, records, end)
         }
     </script>
 

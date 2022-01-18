@@ -80,20 +80,21 @@ function base64ToUint8array(base64) {
   return array;
 }
 
-async function play_ctrl(term, session, start, total_dur, paused, shifted, prog) {
+// replay session
+// term: xterm, path: session file to replay,
+// start: start position to replay in percentile, range 0-100
+// paused: callback whether to stop play
+// prog: callback to update the progress bar
+// shift: callback whether we should change position
+// end: callback when playback is finished
+
+async function replay_session(term, records, total_dur, start, paused, prog, end) {
   var cur = 0
-  var new_pos = -1
 
   start = parseInt(total_dur * start / 100)
   term.reset()
 
-  for (const item of session) {
-    new_pos = shifted()
-
-    if (new_pos != -1) {
-      return new_pos
-    }
-
+  for (const item of records) {
     // we will blast through the beginning of the session
     if (cur >= start) {
       // we are cheating a little bit here, we do not want to wait for too long
@@ -112,49 +113,49 @@ async function play_ctrl(term, session, start, total_dur, paused, shifted, prog)
     }
   }
 
-  return -1
+  end()
 }
-// replay session
-// term: xterm, path: session file to replay,
-// start: start position to replay in percentile, range 0-100
-// paused: callback whether to stop play
-// prog: callback to update the progress bar
-// shift: callback whether we should change position
-// end: callback when playback is finished
-async function replay_session(term, path, start, paused, shifted, prog, end) {
-  var session
-  var total_dur = 0
-  var cur = 0
-  var new_pos = 0
-  var ret = 0
 
-  // read file from server
-  await fetch(path)
-    .then(res => res.json())
-    .then(out => {
-      session = out
-    })
+function forwardScreen(term, records, end) {
+  var cur = 0
+  end = parseInt(total_dur * end / 100)
+  term.reset()
+
+  for (const item of records) {
+    // we will blast through the beginning of the session
+    if (cur >= end) {
+      return
+    }
+
+    term.write(base64ToUint8array(item.Data))
+    cur += item.Duration
+  }
+}
+
+
+async function fetchAndParse(path, update) {
+  var records
+  var total_dur = 0
+
+  // read file from server, we need to await twice.
+  var res = await fetch(path)
+
+  if (!res.ok) {
+    return
+  }
+
+  records = await res.json()
 
   //calculate the total duration
-  for (const item of session) {
+  for (const item of records) {
     item.Duration = parseInt(item.Duration / 1000000)
     total_dur += item.Duration
   }
 
-  console.log("Total duration:", total_dur, "start replay on position", start)
-
-  while (true) {
-    ret = await play_ctrl(term, session, start, total_dur, paused, shifted, prog)
-    if (ret == -1) {
-      break
-    }
-
-    start = ret
-  }
-
-  term.reset()
-  end()
+  console.log("total_dur", total_dur)
+  update(records, total_dur)
 }
+
 
 function Init() {
   let term = createReplayTerminal();
