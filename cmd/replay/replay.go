@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"io"
 	"log"
 	"os"
@@ -16,11 +17,19 @@ type writeRecord struct {
 }
 
 func main() {
-	if len(os.Args) != 2 {
-		log.Fatalln("Usage: replay <recordfile>")
+	var wait uint
+
+	flag.UintVar(&wait, "w", 2000, "Max wait time between outputs")
+	flag.UintVar(&wait, "wait", 2000, "Max wait time between outputs")
+	flag.Parse()
+
+	left := flag.Args()
+
+	if len(left) != 1 {
+		log.Fatalln("Usage: replay -w/wait time <recordfile>")
 	}
 
-	fp, err := os.Open(os.Args[1])
+	fp, err := os.Open(left[0])
 
 	if err != nil {
 		log.Fatalln("Failed to open record file", err)
@@ -31,7 +40,7 @@ func main() {
 		io.Writer
 	}{os.Stdin, os.Stdout}
 
-	t := term.NewTerminal(screen, ">")
+	t := term.NewTerminal(screen, "$")
 
 	if t == nil {
 		log.Fatalln("Failed to create terminal")
@@ -59,6 +68,10 @@ func main() {
 		if err := decoder.Decode(&record); err != nil {
 			log.Println("Failed to decode record", err)
 			continue
+		}
+
+		if record.Dur > time.Duration(wait)*time.Millisecond {
+			record.Dur = time.Duration(wait) * time.Millisecond
 		}
 
 		time.Sleep(record.Dur)
