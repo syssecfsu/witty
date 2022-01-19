@@ -40,7 +40,8 @@
             <button type="button" class="btn btn-primary btn-sm" style="margin-right: 3px;" onclick="playbtn()">
                 <img src="/assets/img/play.svg" id="play-btn" height="18px">
             </button>
-            <input type="range" class="form-range" min="0" max="100" id="replay-control" onchange="seek(this.value)">
+            <input type="range" class="form-range" min="0" max="100" id="replay-control" step="1"
+                oninput="seek(this.value)">
         </div>
     </div>
 
@@ -84,7 +85,20 @@
             }
         }
 
+        // limit the rate of refresh to twice per second. Otherwise
+        // the screen flicks like crazy
+        var lastFired = new Date().getTime()
+
         function seek(end) {
+            var now = new Date().getTime()
+            var elapsed = now - lastFired
+
+            if (elapsed <= 500) {
+                return
+            }
+
+            lastFired = now
+
             // pause the play if it is currently playing
             if (!icon.src.includes("play")) {
                 playbtn()
