@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>WiTTY Login</title>
+    <script src="/assets/external/bootstrap.min.js"></script>
+    <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/signin.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+    <main class="form-signin">
+        <form action="/sign-in" method="post"> 
+            <img class="mb-4" src="/assets/img/logo.svg" alt="" width="64">
+
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" name="username" placeholder="User Name">
+                <label for="username">User Name</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="passwd" name="passwd" placeholder="Password">
+                <label for="passwd">Password</label>
+            </div>
+
+            <div class="checkbox mb-3">
+                <label><input type="checkbox" name="remember" value="true"> Remember me</label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            <p class="mt-5 mb-3 text-muted">WiTTY: Web-based Interactive TTY</p>
+        </form>
+    </main>
+</body>
+
+</html>

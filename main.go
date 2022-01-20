@@ -147,13 +147,12 @@ func main() {
 	// Fill in the index page
 	rt.GET("/", func(c *gin.Context) {
 		host = &c.Request.Host
-		players, records := collectTabData(c)
 
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title":   "interactive terminal",
-			"players": players,
-			"records": records,
-		})
+		c.HTML(http.StatusOK, "index.html", gin.H{})
+	})
+
+	rt.GET("/sign-in", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "signin.html", gin.H{})
 	})
 
 	rt.GET("/favicon.ico", func(c *gin.Context) {
@@ -175,7 +174,6 @@ func main() {
 			active1 = "active"
 		}
 
-		host = &c.Request.Host
 		players, records := collectTabData(c)
 
 		c.HTML(http.StatusOK, "tab.html", gin.H{
