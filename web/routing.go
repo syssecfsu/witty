@@ -44,43 +44,43 @@ func StartWeb(fp *os.File, cmd []string) {
 	// so login can survive server reboot
 	store := sessions.NewCookieStore([]byte(uniuri.NewLen(32)))
 	rt.Use(sessions.Sessions("witty-session", store))
-	rt.Use(AuthRequired)
 
 	rt.SetTrustedProxies(nil)
 	rt.LoadHTMLGlob("./assets/template/*")
-
-	// Fill in the index page
-	rt.GET("/", indexPage)
-	rt.GET("/login", loginPage)
-
-	rt.POST("/login", login)
-	rt.GET("/logout", logout)
-
-	// to update the tabs of current interactive and saved sessions
-	rt.GET("/update/:active", updateIndex)
-
-	// create a new interactive session
-	rt.GET("/new", newInteractive)
-	rt.GET("/ws_new/:id", newTermConn)
-
-	// create a viewer of an interactive session
-	rt.GET("/view/:id", viewPage)
-	rt.GET("/ws_view/:id", newViewWS)
-
-	// start/stop recording the session
-	rt.GET("/record/:id", startRecord)
-	rt.GET("/stop/:id", stopRecord)
-
-	// create a viewer of an interactive session
-	rt.GET("/replay/:id", replayPage)
-
-	// delete a recording
-	rt.GET("/delete/:fname", delRec)
-
 	// handle static files
 	rt.Static("/assets", "./assets")
 	rt.Static("/records", "./records")
 	rt.GET("/favicon.ico", favIcon)
+
+	rt.GET("/login", loginPage)
+	rt.POST("/login", login)
+
+	g1 := rt.Group("/", AuthRequired)
+
+	// Fill in the index page
+	g1.GET("/", indexPage)
+	g1.GET("/logout", logout)
+
+	// to update the tabs of current interactive and saved sessions
+	g1.GET("/update/:active", updateIndex)
+
+	// create a new interactive session
+	g1.GET("/new", newInteractive)
+	g1.GET("/ws_new/:id", newTermConn)
+
+	// create a viewer of an interactive session
+	g1.GET("/view/:id", viewPage)
+	g1.GET("/ws_view/:id", newViewWS)
+
+	// start/stop recording the session
+	g1.GET("/record/:id", startRecord)
+	g1.GET("/stop/:id", stopRecord)
+
+	// create a viewer of an interactive session
+	g1.GET("/replay/:id", replayPage)
+
+	// delete a recording
+	g1.GET("/delete/:fname", delRec)
 
 	term_conn.Init(checkOrigin)
 	rt.RunTLS(":8080", "./tls/cert.pem", "./tls/private-key.pem")

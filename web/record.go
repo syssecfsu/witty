@@ -63,7 +63,7 @@ func collectRecords(c *gin.Context, cmd string) (records []RecordedSession) {
 	if err == nil {
 		for _, finfo := range files {
 			fname := finfo.Name()
-			if !strings.HasSuffix(fname, ".rec") {
+			if !strings.HasSuffix(fname, ".scr") {
 				continue
 			}
 			fsize := finfo.Size() / 1024

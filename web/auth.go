@@ -9,8 +9,15 @@ import (
 )
 
 const (
-	userkey = "user"
+	userkey  = "authorized_user"
+	loginKey = "login_msg"
 )
+
+func leftLoginMsg(c *gin.Context, msg string) {
+	session := sessions.Default(c)
+	session.Set(loginKey, msg)
+	session.Save()
+}
 
 func login(c *gin.Context) {
 	session := sessions.Default(c)
@@ -20,64 +27,66 @@ func login(c *gin.Context) {
 
 	// Validate form input
 	if strings.Trim(username, " ") == "" || strings.Trim(passwd, " ") == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Username/password can't be empty"})
+		leftLoginMsg(c, "User name or password cannot be empty")
+		c.Redirect(http.StatusSeeOther, "/login")
 		return
 	}
 
 	// Check for username and password match, usually from a database
 	if username != "hello" || passwd != "world" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
+		leftLoginMsg(c, "Username/password does not match")
+		c.Redirect(http.StatusSeeOther, "/login")
 		return
 	}
 
 	// Save the username in the session
-	session.Set(userkey, username) // In real world usage you'd set this to the users ID
+	session.Set(userkey, username)
 
 	if err := session.Save(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+		leftLoginMsg(c, "Failed to save session data")
+		c.Redirect(http.StatusSeeOther, "/login")
 		return
 	}
 
 	host = &c.Request.Host
-
 	c.Redirect(http.StatusSeeOther, "/")
 }
 
 func logout(c *gin.Context) {
 	session := sessions.Default(c)
+
 	user := session.Get(userkey)
-	if user == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
-		return
+	if user != nil {
+		session.Delete(userkey)
+		session.Save()
 	}
-	session.Delete(userkey)
-	if err := session.Save(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
-		return
-	}
+
+	leftLoginMsg(c, "Welcome to WiTTY")
 	c.Redirect(http.StatusFound, "/login")
 }
 
 // AuthRequired is a simple middleware to check the session
 func AuthRequired(c *gin.Context) {
-	if (c.Request.URL.String() == "/login") ||
-		strings.HasPrefix(c.Request.URL.String(), "/assets") {
-		c.Next()
-		return
-	}
-
 	session := sessions.Default(c)
 	user := session.Get(userkey)
+
 	if user == nil {
-		// Abort the request with the appropriate error code
+		leftLoginMsg(c, "Not authorized, login first")
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 		c.Abort()
 		return
 	}
-	// Continue down the chain to handler etc
+
 	c.Next()
 }
 
 func loginPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.html", gin.H{})
+	session := sessions.Default(c)
+	msg := session.Get(loginKey)
+
+	if msg == nil {
+		msg = "Login first"
+	}
+
+	c.HTML(http.StatusOK, "login.html", gin.H{"msg": msg})
 }

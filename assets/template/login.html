@@ -14,8 +14,19 @@
 </head>
 
 <body class="text-center">
+    <div class="toast bg-primary text-white border-0" role="alert" aria-live="assertive" aria-atomic="true" id="authMsg"
+        style="position: absolute;top: 0px; right: 10px; z-index:1;">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{.msg}}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+
     <main class="form-signin">
-        <form action="/login" method="post"> 
+        <form action="/login" method="post">
             <img class="mb-4" src="/assets/img/keyboard.svg" alt="" width="64">
 
             <div class="form-floating">
@@ -31,6 +42,19 @@
             <p class="mt-5 mb-3 text-muted">WiTTY: Web-based Interactive TTY</p>
         </form>
     </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var element = document.getElementById("authMsg");
+            var toast = new bootstrap.Toast(element);
+
+            toast.show()
+            setTimeout(() => {
+                toast.hide()
+            }, 1500)
+        });
+    </script>
+
 </body>
 
 </html>
