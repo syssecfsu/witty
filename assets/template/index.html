@@ -27,10 +27,15 @@
             class="d-inline-block align-text-top">
           WiTTY: Web-based interactive TTY
         </a>
-        <a class="btn btn-primary btn-sm float-end" href="/new" onClick="setTimeout(function(){refresh(true)}, 1000)"
-          target="_blank" role="button">
-          New Session
-        </a>
+        <div class="btn-toolbar float-end" role="toolbar" aria-label="top buttons">
+          <a class="btn btn-primary btn-sm  m-1" href="/new" onClick="setTimeout(function(){refresh(true)}, 1000)"
+            target="_blank" role="button">
+            New Session
+          </a>
+          <a class="btn btn-primary btn-sm  m-1" href="/logout" role="button">
+            Logout
+          </a>
+        </div>
       </div>
     </nav>
   </header>
