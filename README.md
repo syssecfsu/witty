@@ -43,7 +43,7 @@ Most icons were provided by [fontawesome](https://fontawesome.com/) under this [
 
 ## Installation
 
-1. Install the [go](https://go.dev/) compiler. __Make sure your have go 1.17 or higher.__ 
+1. Install the [go](https://go.dev/) compiler. __Make sure you have go 1.17 or higher.__ 
 2. Download the release and unzip it, or clone the repo
    
    ```git clone https://github.com/syssecfsu/witty.git```
@@ -74,13 +74,17 @@ Most icons were provided by [fontawesome](https://fontawesome.com/) under this [
 
    If so desired, you can disable user authenticate with ```-n/-naked```, (not recommended) for example:
 
-   ```./witty run -naked htop```     
+   ```./witty run -naked htop```    
 
-7. Connect to the server, for example
+   You can also specify the port number WiTTY listens on with ```-p/port```. For example:
+
+   ```./witty run -p 9090 ssh 192.168.1.2```
+
+7. Connect to the server with your browser, using port 8080 or the one specified in step 6, for example
 
    ```https://<witty_server_ip>:8080```
 
-8. You can also replay the recorded sessions with witty
+8. You can also replay the recorded sessions with witty. Set your terminal window to 120x36 before using this. 
 
    ```./witty replay -w 500 records/<recorded file>.scr```
 

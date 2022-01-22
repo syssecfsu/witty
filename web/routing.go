@@ -1,38 +1,21 @@
 package web
 
 import (
-	"log"
-	"net/http"
-	"net/url"
 	"os"
+	"strconv"
 
 	"github.com/dchest/uniuri"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/csrf"
+	adapter "github.com/gwatts/gin-adapter"
 	"github.com/syssecfsu/witty/term_conn"
 )
 
-var host *string = nil
 var cmdToExec []string
 var noAuth bool
 
-// simple function to check origin
-func checkOrigin(r *http.Request) bool {
-	org := r.Header.Get("Origin")
-	h, err := url.Parse(org)
-
-	if err != nil {
-		return false
-	}
-
-	if (host == nil) || (*host != h.Host) {
-		log.Println("Failed origin check of ", org)
-	}
-
-	return (host != nil) && (*host == h.Host)
-}
-
-func StartWeb(fp *os.File, cmd []string, naked bool) {
+func StartWeb(fp *os.File, cmd []string, naked bool, port uint16) {
 	cmdToExec = cmd
 	noAuth = naked
 
@@ -46,6 +29,10 @@ func StartWeb(fp *os.File, cmd []string, naked bool) {
 	// so login can survive server reboot
 	store := sessions.NewCookieStore([]byte(uniuri.NewLen(32)))
 	rt.Use(sessions.Sessions("witty-session", store))
+
+	csrfHttp := csrf.Protect([]byte(uniuri.NewLen(32)), csrf.SameSite(csrf.SameSiteStrictMode))
+	csrfGin := adapter.Wrap(csrfHttp)
+	rt.Use(csrfGin)
 
 	rt.SetTrustedProxies(nil)
 	rt.LoadHTMLGlob("./assets/template/*")
@@ -71,7 +58,7 @@ func StartWeb(fp *os.File, cmd []string, naked bool) {
 	g1.GET("/update/:active", updateIndex)
 
 	// create a new interactive session
-	g1.GET("/new", newInteractive)
+	g1.POST("/new", newInteractive)
 	g1.GET("/ws_new/:id", newTermConn)
 
 	// create a viewer of an interactive session
@@ -79,15 +66,15 @@ func StartWeb(fp *os.File, cmd []string, naked bool) {
 	g1.GET("/ws_view/:id", newViewWS)
 
 	// start/stop recording the session
-	g1.GET("/record/:id", startRecord)
-	g1.GET("/stop/:id", stopRecord)
+	g1.POST("/record/:id", startRecord)
+	g1.POST("/stop/:id", stopRecord)
 
 	// create a viewer of an interactive session
 	g1.GET("/replay/:id", replayPage)
 
 	// delete a recording
-	g1.GET("/delete/:fname", delRec)
+	g1.POST("/delete/:fname", delRec)
 
-	term_conn.Init(checkOrigin)
-	rt.RunTLS(":8080", "./tls/cert.pem", "./tls/private-key.pem")
+	term_conn.Init()
+	rt.RunTLS(":"+strconv.FormatUint(uint64(port), 10), "./tls/cert.pem", "./tls/private-key.pem")
 }

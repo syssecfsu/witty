@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/csrf"
 )
 
 const (
@@ -48,7 +49,6 @@ func login(c *gin.Context) {
 		return
 	}
 
-	host = &c.Request.Host
 	c.Redirect(http.StatusSeeOther, "/")
 }
 
@@ -88,5 +88,10 @@ func loginPage(c *gin.Context) {
 		msg = "Login first"
 	}
 
-	c.HTML(http.StatusOK, "login.html", gin.H{"msg": msg})
+	c.HTML(http.StatusOK, "login.html",
+		gin.H{
+			"msg":       msg,
+			"csrfField": csrf.TemplateField(c.Request),
+		},
+	)
 }

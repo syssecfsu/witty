@@ -17,9 +17,12 @@ func main() {
 	}
 
 	var naked bool
+	var port uint
 	runCmd := flag.NewFlagSet("run", flag.ExitOnError)
 	runCmd.BoolVar(&naked, "n", false, "Run WiTTY without user authentication")
 	runCmd.BoolVar(&naked, "naked", false, "Run WiTTY without user authentication")
+	runCmd.UintVar(&port, "p", 8080, "Port number to listen on")
+	runCmd.UintVar(&port, "port", 8080, "Port number to listen on")
 
 	var wait uint
 	replayCmd := flag.NewFlagSet("replay", flag.ExitOnError)
@@ -65,7 +68,6 @@ func main() {
 		runCmd.Parse(os.Args[2:])
 
 		var cmdToExec []string
-
 		args := runCmd.Args()
 		if len(args) > 0 {
 			cmdToExec = args
@@ -73,7 +75,7 @@ func main() {
 			cmdToExec = []string{"bash"}
 		}
 
-		web.StartWeb(fp, cmdToExec, naked)
+		web.StartWeb(fp, cmdToExec, naked, uint16(port))
 
 	default:
 		fmt.Println("witty (adduser|deluser|replay|run)")

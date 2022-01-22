@@ -5,6 +5,7 @@ import (
 
 	"github.com/dchest/uniuri"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/csrf"
 	"github.com/syssecfsu/witty/term_conn"
 )
 
@@ -27,14 +28,18 @@ func collectSessions(c *gin.Context, cmd string) (players []InteractiveSession) 
 }
 
 func indexPage(c *gin.Context) {
-	host = &c.Request.Host
 	var disabled = ""
 
 	if noAuth {
 		disabled = "disabled"
 	}
 
-	c.HTML(http.StatusOK, "index.html", gin.H{"disabled": disabled})
+	c.HTML(http.StatusOK, "index.html",
+		gin.H{
+			"disabled":  disabled,
+			"csrfField": csrf.TemplateField(c.Request),
+			"csrfToken": csrf.Token(c.Request),
+		})
 }
 
 func updateIndex(c *gin.Context) {
@@ -63,17 +68,14 @@ func updateIndex(c *gin.Context) {
 }
 
 func newInteractive(c *gin.Context) {
-	if host == nil {
-		host = &c.Request.Host
-	}
-
 	id := uniuri.New()
 
 	c.HTML(http.StatusOK, "term.html", gin.H{
-		"title": "interactive terminal",
-		"path":  "/ws_new/" + id,
-		"id":    id,
-		"logo":  "keyboard",
+		"title":     "interactive terminal",
+		"path":      "/ws_new/" + id,
+		"id":        id,
+		"logo":      "keyboard",
+		"csrfToken": csrf.Token(c.Request),
 	})
 }
 
@@ -85,10 +87,11 @@ func newTermConn(c *gin.Context) {
 func viewPage(c *gin.Context) {
 	id := c.Param("id")
 	c.HTML(http.StatusOK, "term.html", gin.H{
-		"title": "viewer terminal",
-		"path":  "/ws_view/" + id,
-		"id":    id,
-		"logo":  "view",
+		"title":     "viewer terminal",
+		"path":      "/ws_view/" + id,
+		"id":        id,
+		"logo":      "view",
+		"csrfToken": csrf.Token(c.Request),
 	})
 }
 

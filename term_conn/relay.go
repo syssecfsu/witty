@@ -36,12 +36,22 @@ const (
 	stopCmd   = 0
 )
 
+// simple function to check origin
+func checkOrigin(r *http.Request) bool {
+	org := r.Header.Get("Origin")
+
+	if org != "https://"+r.Host {
+		log.Println("Failed origin check of ", org, r.Host)
+		return false
+	}
+
+	return true
+}
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  readBufferSize,
 	WriteBufferSize: WriteBufferSize,
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
+	CheckOrigin:     checkOrigin,
 }
 
 // TermConn represents the connected websocket and pty.
@@ -420,8 +430,7 @@ func ConnectTerm(w http.ResponseWriter, r *http.Request, isViewer bool, name str
 	}
 }
 
-func Init(checkOrigin func(r *http.Request) bool) {
-	upgrader.CheckOrigin = checkOrigin
+func Init() {
 	registry.init()
 }
 

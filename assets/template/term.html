@@ -23,7 +23,8 @@
     <nav class="navbar navbar-light bg-light shadow-sm navbar-xs">
       <div class="container-fluid">
         <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
-          <img src="/assets/img/{{.logo}}.svg" style="margin-right: 0.5rem;" height="32" class="d-inline-block align-text-top">
+          <img src="/assets/img/{{.logo}}.svg" style="margin-right: 0.5rem;" height="32"
+            class="d-inline-block align-text-top">
           {{.title}}
         </a>
         <button type="button" id="record_onoff" class="btn btn-primary btn-sm float-end" value="Record"
@@ -41,15 +42,24 @@
 
   <script>
     function recordOnOff(on) {
+      let formData = new FormData()
+      formData.append('gorilla.csrf.Token', {{.csrfToken}})
+
       var btn = document.getElementById("record_onoff");
       if (btn.value == "Record") {
         btn.value = "Stop";
         btn.innerHTML = btn.value
-        fetch("/record/{{.id}}")
+        fetch("/record/{{.id}}", {
+          method: "POST",
+          body: formData,
+        })
       } else {
         btn.value = "Record";
         btn.innerHTML = btn.value
-        fetch("/stop/{{.id}}")
+        fetch("/stop/{{.id}}", {
+          method: "POST",
+          body: formData,
+        })
       }
     }
 
@@ -63,7 +73,7 @@
         ''
       ].join('');
 
-      term.writeln (str)
+      term.writeln(str)
     }
 
     Init()
