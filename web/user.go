@@ -71,6 +71,11 @@ func AddUser(username string) {
 		return
 	}
 
+	if len(passwd) < 12 {
+		fmt.Println("Password too short, at least 12 bytes")
+		return
+	}
+
 	fmt.Println("Please type your password again:")
 	passwd2, err := term.ReadPassword(int(os.Stdin.Fd()))
 
