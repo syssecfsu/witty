@@ -248,8 +248,8 @@ out:
 				if err != nil {
 					log.Println("Failed to marshal record", err)
 				} else {
-					tc.record.Write(jbuf)
 					tc.record.Write([]byte(",")) // write a deliminator
+					tc.record.Write(jbuf)
 				}
 
 				tc.lastRecTime = time.Now()
@@ -259,7 +259,7 @@ out:
 			var err error
 			if cmd == recordCmd {
 				// use the session ID and current as file name
-				fname := "./records/" + tc.Name + "_" + strconv.FormatInt(time.Now().Unix(), 16) + ".rec"
+				fname := "./records/" + tc.Name + "_" + strconv.FormatInt(time.Now().Unix(), 16) + ".scr"
 
 				tc.record, err = os.OpenFile(fname, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 				if err != nil {
@@ -268,16 +268,14 @@ out:
 				}
 
 				tc.record.Write([]byte("[")) // write a [ for an array of json objs
+
+				// write a dummy record to clear the screen.
 				tc.lastRecTime = time.Now()
+				jbuf, _ := json.Marshal(WriteRecord{Dur: time.Since(tc.lastRecTime), Data: []byte("\033[2J\033[H")})
+				tc.record.Write(jbuf)
+
 			} else {
-				fsinfo, err := tc.record.Stat()
-
-				if err == nil {
-					tc.record.Truncate(fsinfo.Size() - 1)
-					tc.record.Seek(0, 2) // truncate does not change read/write location
-					tc.record.Write([]byte("]"))
-				}
-
+				tc.record.Write([]byte("]"))
 				tc.record.Close()
 				tc.record = nil
 			}
