@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/dchest/uniuri"
@@ -54,7 +55,7 @@ func addUser(username []byte, passwd []byte) {
 
 	output, err := json.Marshal(users)
 	if err != nil {
-		fmt.Println("Failed to marshal passwords", err)
+		log.Println("Failed to marshal passwords", err)
 		return
 	}
 
@@ -66,7 +67,7 @@ func AddUser(username string) {
 	passwd, err := term.ReadPassword(int(os.Stdin.Fd()))
 
 	if err != nil {
-		fmt.Println("Failed to read password", err)
+		log.Println("Failed to read password", err)
 		return
 	}
 
@@ -74,7 +75,7 @@ func AddUser(username string) {
 	passwd2, err := term.ReadPassword(int(os.Stdin.Fd()))
 
 	if err != nil {
-		fmt.Println("Failed to read password", err)
+		log.Println("Failed to read password", err)
 		return
 	}
 
@@ -93,14 +94,14 @@ func DelUser(username string) {
 	exist := false
 	file, err := os.ReadFile(userFileName)
 	if err != nil {
-		fmt.Println("Failed to read users file", err)
+		log.Println("Failed to read users file", err)
 		return
 	}
 
 	err = json.Unmarshal(file, &users)
 
 	if err != nil {
-		fmt.Println("Failed to parse json format", err)
+		log.Println("Failed to parse json format", err)
 		return
 	}
 	// update the existing user if it exists
@@ -115,11 +116,34 @@ func DelUser(username string) {
 	if exist {
 		output, err := json.Marshal(users)
 		if err != nil {
-			fmt.Println("Failed to marshal passwords", err)
+			log.Println("Failed to marshal passwords", err)
 			return
 		}
 
 		os.WriteFile(userFileName, output, 0660)
+	}
+}
+
+func ListUsers() {
+	var users []UserRecord
+	var err error
+
+	file, err := os.ReadFile(userFileName)
+	if err != nil {
+		log.Println("Failed to read users file", err)
+		return
+	}
+
+	err = json.Unmarshal(file, &users)
+
+	if err != nil {
+		log.Println("Failed to parse json format", err)
+		return
+	}
+	// update the existing user if it exists
+	fmt.Println("Users of the system:")
+	for _, u := range users {
+		fmt.Println("   ", string(u.User))
 	}
 }
 
@@ -129,14 +153,14 @@ func ValidateUser(username []byte, passwd []byte) bool {
 
 	file, err := os.ReadFile(userFileName)
 	if err != nil {
-		fmt.Println("Failed to read users file", err)
+		log.Println("Failed to read users file", err)
 		return false
 	}
 
 	err = json.Unmarshal(file, &users)
 
 	if err != nil {
-		fmt.Println("Failed to parse json format", err)
+		log.Println("Failed to parse json format", err)
 		return false
 	}
 
