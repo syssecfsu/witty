@@ -33,7 +33,7 @@ func login(c *gin.Context) {
 	}
 
 	// Check for username and password match, usually from a database
-	if username != "hello" || passwd != "world" {
+	if !ValidateUser([]byte(username), []byte(passwd)) {
 		leftLoginMsg(c, "Username/password does not match")
 		c.Redirect(http.StatusSeeOther, "/login")
 		return

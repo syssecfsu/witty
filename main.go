@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -15,17 +17,48 @@ func main() {
 		log.SetOutput(fp)
 	}
 
-	// parse the arguments. User can pass the command to execute
-	// by default, we use bash, but macos users might want to use zsh
-	// you can also run single program, such as pstree, htop...
-	// but program might misbehave (htop seems to be fine)
-	var cmdToExec = []string{"bash"}
-	args := os.Args
-
-	if len(args) > 1 {
-		cmdToExec = args[1:]
-		log.Println(cmdToExec)
+	if len(os.Args) < 2 {
+		fmt.Println("witty (adduser|deluser|run)")
+		return
 	}
 
-	web.StartWeb(fp, cmdToExec)
+	var naked bool
+	runCmd := flag.NewFlagSet("run", flag.ExitOnError)
+	runCmd.BoolVar(&naked, "n", false, "Run WiTTY without user authentication")
+	runCmd.BoolVar(&naked, "naked", false, "Run WiTTY without user authentication")
+
+	switch os.Args[1] {
+	case "adduser":
+		if len(os.Args) != 3 {
+			fmt.Println("witty adduser <username>")
+			return
+		}
+		web.AddUser(os.Args[2])
+
+	case "deluser":
+		if len(os.Args) != 3 {
+			fmt.Println("witty deluser <username>")
+			return
+		}
+		web.DelUser(os.Args[2])
+
+	case "run":
+		runCmd.Parse(os.Args[2:])
+
+		var cmdToExec []string
+
+		args := runCmd.Args()
+		if len(args) > 0 {
+			cmdToExec = args
+		} else {
+			cmdToExec = []string{"bash"}
+		}
+
+		web.StartWeb(fp, cmdToExec, naked)
+
+	default:
+		fmt.Println("witty (adduser|deluser|run)")
+		return
+	}
+
 }

@@ -9,7 +9,7 @@ This program allows you to use terminal in the browser. Simply run the program a
 
    This repository contains a recorded session in the ```assets/extra``` directory ([M1NXZvHdvA8vSCKp_61e5d60f.rec](extra/M1NXZvHdvA8vSCKp_61e5d60f.rec)) that shows me upgrading pihole. Just put the file under the ```records``` directory, run the server, you should find the recording in the ```Recorded Session``` tab. 
 
-3. More features are planned, including user authentication. Suggestions are welcome.  
+3. More features are planned, suggestions are welcome.  
 
 You can use WiTTY to run any command line programs, such as ```bash```, ```htop```, ```vi```, ```ssh```. This following screenshot shows that three interactive session running ```zsh``` on macOS Monterey. <img src="extra/main.png" width="800px">
 
@@ -32,11 +32,7 @@ gifsicle -O3 .\output.gif -o replay.gif
 -->
 
 
-To use the program, you need to provide a TLS cert. You can request a free [Let's Encrypt](https://letsencrypt.org/) cert or use a self-signed cert. The program currently does not support user authentication. Therefore, do not run it in untrusted networks or leave it running. A probably safe use of the program is to run ```ssh```. Please ensure that you do not automatically login to the ssh server (e.g., via key authentication).
-
-__AGAIN, Do NOT run this in an untrusted network. You will expose your 
-shell to anyone that can access your network and Do NOT leave
-the server running.__
+To use the program, you need to provide a TLS cert. You can request a free [Let's Encrypt](https://letsencrypt.org/) cert or use a self-signed cert. By default, WiTTY authenticate users with username and password. You can add a new user using ```witty adduser <username>```, and delete an existing user with ```witty deluser <username>```. It is also possible to disable user authentication with ```-n/-naked``` to the run command. For example, ```witty run -n zsh``` will run zsh without user authentication. 
 
 This program is written in the [go programming language](https://go.dev/), using the 
 [Gin web framework](https://github.com/gin-gonic/gin), [gorilla/websocket](https://github.com/gorilla/websocket), [pty](https://github.com/creack/pty), and the wonderful [xterm.js](https://xtermjs.org/)!
@@ -66,13 +62,21 @@ Most icons were provided by [fontawesome](https://fontawesome.com/) under this [
    
    ```go build .```
 
-5. Start the server and give it the command to run. The server listens on 8080, for example:
+5. Add a user to the user accounts, follow the instructions on screen to provide the password
    
-   ```./witty htop``` or
+   ```./witty adduser <username>```
 
-   ```./witty ssh <ssh_server_ip> -l <user_name>```
+6. Start the server and give it the command to run. The server listens on 8080, for example:
+   
+   ```./witty run htop``` or
 
-6. Connect to the server, for example
+   ```./witty run ssh <ssh_server_ip> -l <user_name>```
+
+   If so desired, you can disable user authenticate with ```-n/-naked```, (not recommended) for example:
+
+   ```./witty run -naked htop```     
+
+7. Connect to the server, for example
 
    ```https://<witty_server_ip>:8080```
 

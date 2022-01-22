@@ -28,8 +28,13 @@ func collectSessions(c *gin.Context, cmd string) (players []InteractiveSession) 
 
 func indexPage(c *gin.Context) {
 	host = &c.Request.Host
+	var disabled = ""
 
-	c.HTML(http.StatusOK, "index.html", gin.H{})
+	if noAuth {
+		disabled = "disabled"
+	}
+
+	c.HTML(http.StatusOK, "index.html", gin.H{"disabled": disabled})
 }
 
 func updateIndex(c *gin.Context) {

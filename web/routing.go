@@ -14,6 +14,7 @@ import (
 
 var host *string = nil
 var cmdToExec []string
+var noAuth bool
 
 // simple function to check origin
 func checkOrigin(r *http.Request) bool {
@@ -31,8 +32,9 @@ func checkOrigin(r *http.Request) bool {
 	return (host != nil) && (*host == h.Host)
 }
 
-func StartWeb(fp *os.File, cmd []string) {
+func StartWeb(fp *os.File, cmd []string, naked bool) {
 	cmdToExec = cmd
+	noAuth = naked
 
 	if fp != nil {
 		gin.DefaultWriter = fp
@@ -55,7 +57,11 @@ func StartWeb(fp *os.File, cmd []string) {
 	rt.GET("/login", loginPage)
 	rt.POST("/login", login)
 
-	g1 := rt.Group("/", AuthRequired)
+	g1 := rt.Group("/")
+
+	if !naked {
+		g1.Use(AuthRequired)
+	}
 
 	// Fill in the index page
 	g1.GET("/", indexPage)
