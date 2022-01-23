@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	userFileName = "user.db"
+	userFileName = "./user.db"
 )
 
 type UserRecord struct {
@@ -37,18 +37,27 @@ func addUser(username []byte, passwd []byte) {
 	exist := false
 	file, err := os.ReadFile(userFileName)
 
-	if (err == nil) && (json.Unmarshal(file, users) == nil) {
-		// update the existing user if it exists
-		for _, u := range users {
-			if bytes.Equal(u.User, username) {
-				u.Seed = seed
-				u.Passwd = hashed
-				exist = true
-				break
-			}
+	if err != nil {
+		log.Println("Failed to read user.db file", err)
+		goto nonexist
+	}
+
+	if err = json.Unmarshal(file, &users); err != nil {
+		log.Println("Failed to unmarsh file", err)
+		goto nonexist
+	}
+
+	// update the existing user if it exists
+	for i, u := range users {
+		if bytes.Equal(u.User, username) {
+			users[i].Seed = seed
+			users[i].Passwd = hashed
+			exist = true
+			break
 		}
 	}
 
+nonexist:
 	if !exist {
 		users = append(users, UserRecord{username, seed, hashed})
 	}

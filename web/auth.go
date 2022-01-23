@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	userkey  = "authorized_user"
+	userKey  = "authorized_user"
+	nameKey  = "last_login"
 	loginKey = "login_msg"
 )
 
@@ -41,7 +42,8 @@ func login(c *gin.Context) {
 	}
 
 	// Save the username in the session
-	session.Set(userkey, username)
+	session.Set(userKey, username)
+	session.Set(nameKey, username)
 
 	if err := session.Save(); err != nil {
 		leftLoginMsg(c, "Failed to save session data")
@@ -55,9 +57,9 @@ func login(c *gin.Context) {
 func logout(c *gin.Context) {
 	session := sessions.Default(c)
 
-	user := session.Get(userkey)
+	user := session.Get(userKey)
 	if user != nil {
-		session.Delete(userkey)
+		session.Delete(userKey)
 		session.Save()
 	}
 
@@ -68,7 +70,7 @@ func logout(c *gin.Context) {
 // AuthRequired is a simple middleware to check the session
 func AuthRequired(c *gin.Context) {
 	session := sessions.Default(c)
-	user := session.Get(userkey)
+	user := session.Get(userKey)
 
 	if user == nil {
 		leftLoginMsg(c, "Not authorized, login first")
@@ -88,9 +90,15 @@ func loginPage(c *gin.Context) {
 		msg = "Login first"
 	}
 
+	username := session.Get(nameKey)
+	if username == nil {
+		username = ""
+	}
+
 	c.HTML(http.StatusOK, "login.html",
 		gin.H{
 			"msg":       msg,
+			"username":  username,
 			"csrfField": csrf.TemplateField(c.Request),
 		},
 	)
