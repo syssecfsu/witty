@@ -279,9 +279,9 @@ out:
 
 				tc.record.Write([]byte("[")) // write a [ for an array of json objs
 
-				// write a dummy record to clear the screen.
+				// write a dummy record
 				tc.lastRecTime = time.Now()
-				jbuf, _ := json.Marshal(WriteRecord{Dur: time.Since(tc.lastRecTime), Data: []byte("\033[2J\033[H")})
+				jbuf, _ := json.Marshal(WriteRecord{Dur: time.Since(tc.lastRecTime), Data: []byte("")})
 				tc.record.Write(jbuf)
 
 			} else {
