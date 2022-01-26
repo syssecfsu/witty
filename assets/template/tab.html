@@ -10,7 +10,7 @@
                     <u>{{.Id}}</u>
                 </p>
                 <a class="btn btn-outline-success btn-sm float-end" href="/view/{{.Id}}" target="_blank" role="button">
-                    <img src="/assets/img/view.svg" height="18px">
+                    <img src="/assets/img/view.svg" height="20px">
                 </a>
             </div>
         </div>
@@ -33,13 +33,18 @@
                 <div class="btn-toolbar float-end" role="toolbar" aria-label="records buttons">
                     <a class="btn btn-outline-success btn-sm m-1" href="/replay/{{.Fname}}" target="_blank"
                         role="button">
-                        <img src="/assets/img/play.svg" height="18px">
+                        <img src="/assets/img/play.svg" height="20px">
                     </a>
                     <a class="btn btn-outline-success btn-sm m-1" href="/records/{{.Fname}}" role="button" download>
-                        <img src="/assets/img/download.svg" height="18px">
+                        <img src="/assets/img/download.svg" height="20px">
                     </a>
+                    <!-- a button show the rename modal and pass data to it, do not change any data-bs- fields. 
+                    that is the magic of bootstrap framework -->
+                    <button type="button" class="btn btn-outline-success btn-sm m-1" data-bs-toggle="modal" data-bs-target="#renameModal" data-bs-whatever="{{.Fname}}" >
+                        <img src="/assets/img/edit.svg" height="20px">
+                    </button>
                     <button type="button" class="btn btn-outline-success btn-sm m-1" onclick="del_btn({{.Fname}})">
-                        <img src="/assets/img/delete.svg" height="18px">
+                        <img src="/assets/img/delete.svg" height="20px">
                     </button>
                 </div>
             </div>

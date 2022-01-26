@@ -41,6 +41,25 @@
     </nav>
   </header>
 
+  <!-- A modal to rename file -->
+  <div class="modal" id="renameModal" tabindex="-1" aria-labelledby="renameModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body bg-light">
+            <div class="mb-3">
+              <label for="new_name"><strong>Rename</strong></label>
+              <label for="new_name" class="col-form-label"></label>
+              <input type="text" class="form-control" id="new_name">
+            </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="rename_btn()">Rename</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <main>
     <div class="container-fluid" style="margin-top:1em;">
       <ul class="nav nav-tabs" id="js_sucks" role="tablist">
@@ -107,6 +126,41 @@
     stab.addEventListener('shown.bs.tab', function (event) {
       active_tab = 1
     })
+
+
+    var renameModal = document.getElementById('renameModal')
+
+    renameModal.addEventListener('show.bs.modal', function (event) {
+      var button = event.relatedTarget // which button lunched this modal
+      var file = button.getAttribute('data-bs-whatever')
+      var modalTitle = renameModal.querySelector('.col-form-label')
+      modalTitle.textContent = file
+    })
+
+    function rename_btn() {
+      var modalTitle = renameModal.querySelector('.col-form-label')
+      var modalInput = renameModal.querySelector('.form-control')
+      var newName = modalInput.value.trim()
+
+      if (newName == "") {
+        console.log("New name is empty, ignore request")
+        return
+      }
+
+      path = "/rename/" + modalTitle.textContent + "/" + newName
+
+      let formData = new FormData()
+      formData.append('gorilla.csrf.Token', {{.csrfToken}})
+
+      fetch(path, {
+        method: "POST",
+        body: formData,
+      })
+      setTimeout(function () {
+        refresh(true)
+      }, 20);
+    }
+
   </script>
 
 </body>
