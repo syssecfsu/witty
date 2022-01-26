@@ -30,7 +30,7 @@ func StartWeb(fp *os.File, cmd []string, naked bool, port uint16) {
 	store := sessions.NewCookieStore([]byte(uniuri.NewLen(32)))
 	rt.Use(sessions.Sessions("witty-session", store))
 
-	csrfHttp := csrf.Protect([]byte(uniuri.NewLen(32)), csrf.SameSite(csrf.SameSiteStrictMode))
+	csrfHttp := csrf.Protect([]byte(uniuri.NewLen(32)))
 	csrfGin := adapter.Wrap(csrfHttp)
 	rt.Use(csrfGin)
 
