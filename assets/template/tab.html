@@ -25,12 +25,12 @@
         <!-- repeat this for each recorded session -->
         {{range .records}}
         <div class="card shadow-sm border-info bg-light mb-3" style="width: 16rem; margin:1em;">
-            <div class="card-body">
+            <div class="card-body d-flex flex-column">
                 <h5 class="card-title">Recorded session</h5>
                 <p class="card-text">File name: <u>{{.Fname}}</u>, file size: <em>{{.Fsize}}KB</em>,
                     recorded at <strong>{{.Time}}</strong>, duration: <mark>{{.Duration}}s</mark>,
                 </p>
-                <div class="btn-toolbar float-end" role="toolbar" aria-label="records buttons">
+                <div class="btn-toolbar mt-auto" role="toolbar" aria-label="records buttons">
                     <a class="btn btn-outline-success btn-sm m-1" href="/replay/{{.Fname}}" target="_blank"
                         role="button">
                         <img src="/assets/img/play.svg" height="20px">
