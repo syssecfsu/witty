@@ -106,3 +106,21 @@ func delRec(c *gin.Context) {
 		log.Println("Failed to delete file,", err)
 	}
 }
+
+func renameRec(c *gin.Context) {
+	oldName := "./records/" + c.Param("oldname")
+	newName := "./records/" + c.Param("newname")
+
+	if !strings.HasSuffix(newName, ".scr") {
+		newName += ".scr"
+	}
+
+	if _, err := os.Stat(newName); err == nil {
+		log.Println(newName, "already exist, ignore the request")
+		return
+	}
+
+	if err := os.Rename(oldName, newName); err != nil {
+		log.Println("Failed to rename file,", err)
+	}
+}

@@ -74,6 +74,8 @@ func StartWeb(fp *os.File, cmd []string, naked bool, port uint16) {
 
 	// delete a recording
 	g1.POST("/delete/:fname", delRec)
+	// Rename a recording
+	g1.POST("/rename/:oldname/:newname", renameRec)
 
 	term_conn.Init()
 	rt.RunTLS(":"+strconv.FormatUint(uint64(port), 10), "./tls/cert.pem", "./tls/private-key.pem")
