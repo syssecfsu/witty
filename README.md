@@ -14,16 +14,18 @@ This program allows you to use terminal in the browser. Simply run the program a
 
 # User Interface
 
-You can use WiTTY to run any command line programs, such as ```bash```, ```htop```, ```vi```, ```ssh```. This screenshot shows the main page of WiTTY after login. There are two tabs that list live and recorded sessions, respectively. You can click ```New Session``` to create a new interactive session. Click the <img src="assets/img/view.svg" width="16px"> icon of an interactive session opens a read-only view of that session. <img src="extra/main.png" width="640px">
+You can use WiTTY to run any command line programs, such as ```bash```, ```htop```, ```vi```, ```ssh```. This screenshot shows the main page of WiTTY after login. There are two tabs that list live and recorded sessions, respectively. You can click ```New Session``` to create a new interactive session. Click the <img src="assets/img/view.svg" width="16px"> icon of an interactive session opens a read-only view of that session. 
+   
+<img src="extra/main.png" width="800px">
 
 
 On the interactive terminal window, you can record an ongoing session. 
 
-<img src="extra/interactive.png" width="640px">
+<img src="extra/interactive.png" width="800px">
 
 This screenshot shows three recorded sessions, you can replay <img src="assets/img/play.svg" width="16px">, download <img src="assets/img/download.svg" width="16px">, rename <img src="assets/img/edit.svg" width="16px">, and delete <img src="assets/img/delete.svg" width="16px"> recorded session. 
 
-<img src="extra/view.png" width="640px">
+<img src="extra/view.png" width="800px">
 
 
 Here is a recorded session, where we domonstrate how to use the command line replay utility (in ```cmd/replay```) to replay another recorded session that sshes into a Raspberry Pi running 
@@ -31,7 +33,7 @@ Here is a recorded session, where we domonstrate how to use the command line rep
 
 >The inception is strong with this one!
 
-<img src="extra/replay.gif" width="550px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="extra/replay.gif" width="800px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 <!-- 
@@ -58,7 +60,7 @@ Most icons were provided by [fontawesome](https://fontawesome.com/) under this [
    
    ```git clone https://github.com/syssecfsu/witty.git```
 
-3. WiTTY uses TLS to protect traffic. You can request a free [Let's Encrypt](https://letsencrypt.org/) cert or use a self-signed cert. Here is how to create a self-signed cert in the ```tls``` sub-directory:
+3. WiTTY uses TLS to protect its traffic. You can request a free [Let's Encrypt](https://letsencrypt.org/) cert or use a self-signed cert. Here is how to create a self-signed cert in the ```tls``` sub-directory:
    
    \# Generate a private key for a curve
 
@@ -98,11 +100,8 @@ WiTTY uses username/password based authentication. The user database is stored i
    - ```witty deluser <username>```
    - ```witty listusers```
 
-They are pretty self-explanatory. Just follow the instructions on screen. Note that passwords must be 12 bytes or longer. The following screenshot shows the login screen:
-
-<img src="extra/login.png" width="320px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-
+They are pretty self-explanatory. Just follow the instructions on screen. Note that passwords must be 12 bytes or longer. 
+   
 # Recorded Sessions
 
 WiTTY provides two sub-commands to merge and replay recorded sessions. 
@@ -112,13 +111,10 @@ WiTTY provides two sub-commands to merge and replay recorded sessions.
 
 Recorded sessions often have long delay between outputs. You can set wait_time to limit the maximum wait time between outputs, to speed up the replay. 
 
-You can also use ```witty merge``` to merge two or more recorded sessions. 
+You can also use ```witty merge``` to merge two or more recorded sessions, as shown below.
 
-The intended use case is to record a separate session for each individual task, rename and merge them into a final session for submission. 
+<img src="extra/merge.png" width="640px">
 
-The following screenshot shows how to rename a recorded session, and combine them into the final session. 
+The intended use case is to record a separate session for each individual task, rename and merge them into a final session for submission. The following screenshot shows how to rename a recorded session, and combine them into the final session (you can also rename a recorded session using commands in a shell. All the recorded sessions are located under the ```records``` directory). 
 
-<img src="extra/rename.png" width="640px">
-
-
-<img src="extra/merge.png" width="550px">
+<img src="extra/rename.png" width="800px">
