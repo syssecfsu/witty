@@ -38,7 +38,6 @@ func addUser(username []byte, passwd []byte) {
 	file, err := os.ReadFile(userFileName)
 
 	if err != nil {
-		log.Println("Failed to read user.db file", err)
 		goto nonexist
 	}
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"strings"
 )
 
 func Merge(fnames []string, output string) {
@@ -32,6 +33,10 @@ func Merge(fnames []string, output string) {
 	if err != nil {
 		log.Println("Failed to merge into JSON format", err)
 		return
+	}
+
+	if !strings.HasSuffix(output, ".scr") {
+		output += ".scr"
 	}
 
 	os.WriteFile(output, data, 0664)
