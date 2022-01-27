@@ -37,7 +37,7 @@ func StartWeb(fp *os.File, cmd []string, naked bool, port uint16) {
 	rt.SetTrustedProxies(nil)
 	rt.LoadHTMLGlob("./assets/template/*")
 	// handle static files
-	rt.Static("/assets", "./assets")
+	rt.StaticFS("/assets", assetFS())
 	rt.Static("/records", "./records")
 	rt.GET("/favicon.ico", favIcon)
 
