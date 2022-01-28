@@ -1,8 +1,10 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"strconv"
@@ -15,6 +17,9 @@ import (
 const (
 	subcmds = "witty (adduser|deluser|listusers|replay|merge|run)"
 )
+
+//go:embed assets/*
+var fullAssets embed.FS
 
 func main() {
 	if len(os.Args) < 2 {
@@ -43,8 +48,8 @@ func main() {
 	case "replay":
 		var wait uint
 		replayCmd := flag.NewFlagSet("replay", flag.ExitOnError)
-		replayCmd.UintVar(&wait, "w", 2000, "Max wait time between outputs")
-		replayCmd.UintVar(&wait, "wait", 2000, "Max wait time between outputs")
+		replayCmd.UintVar(&wait, "w", 1000, "Max wait time between outputs")
+		replayCmd.UintVar(&wait, "wait", 1000, "Max wait time between outputs")
 
 		replayCmd.Parse(os.Args[2:])
 
@@ -74,13 +79,15 @@ func main() {
 		term_conn.Merge(mergeCmd.Args(), output)
 
 	case "run":
-		var naked bool
-		var port uint
+		// setup the web options
+		var options web.Options
 		runCmd := flag.NewFlagSet("run", flag.ExitOnError)
-		runCmd.BoolVar(&naked, "n", false, "Run WiTTY without user authentication")
-		runCmd.BoolVar(&naked, "naked", false, "Run WiTTY without user authentication")
-		runCmd.UintVar(&port, "p", 8080, "Port number to listen on")
-		runCmd.UintVar(&port, "port", 8080, "Port number to listen on")
+		runCmd.BoolVar(&options.NoAuth, "n", false, "Run WiTTY without user authentication")
+		runCmd.BoolVar(&options.NoAuth, "naked", false, "Run WiTTY without user authentication")
+		runCmd.UintVar(&options.Port, "p", 8080, "Port number to listen on")
+		runCmd.UintVar(&options.Port, "port", 8080, "Port number to listen on")
+		runCmd.UintVar(&options.Wait, "w", 1000, "Max wait time between outputs")
+		runCmd.UintVar(&options.Wait, "wait", 1000, "Max wait time between outputs")
 
 		fp, err := os.OpenFile("witty.log", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 
@@ -88,6 +95,8 @@ func main() {
 			defer fp.Close()
 			log.SetOutput(fp)
 		}
+
+		options.LogFile = fp
 
 		runCmd.Parse(os.Args[2:])
 
@@ -99,7 +108,19 @@ func main() {
 			cmdToExec = []string{"bash"}
 		}
 
-		web.StartWeb(fp, cmdToExec, naked, uint16(port))
+		options.CmdToExec = cmdToExec
+
+		// we need to strip the top level directory for Gin to find the files
+		assets, err := fs.Sub(fullAssets, "assets")
+
+		if err != nil {
+			log.Fatal("Failed to load assets", err)
+		}
+
+		options.EmbedAssets = fullAssets
+		options.Assets = assets
+
+		web.StartWeb(&options)
 
 	default:
 		fmt.Println(subcmds)

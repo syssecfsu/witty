@@ -1,6 +1,10 @@
 package web
 
 import (
+	"embed"
+	"html/template"
+	"io/fs"
+	"net/http"
 	"os"
 	"strconv"
 
@@ -12,15 +16,23 @@ import (
 	"github.com/syssecfsu/witty/term_conn"
 )
 
-var cmdToExec []string
-var noAuth bool
+type Options struct {
+	Wait        uint
+	Port        uint
+	NoAuth      bool
+	CmdToExec   []string
+	Assets      fs.FS
+	EmbedAssets embed.FS
+	LogFile     *os.File
+}
 
-func StartWeb(fp *os.File, cmd []string, naked bool, port uint16) {
-	cmdToExec = cmd
-	noAuth = naked
+var options Options
 
-	if fp != nil {
-		gin.DefaultWriter = fp
+func StartWeb(opt *Options) {
+	options = *opt
+
+	if options.LogFile != nil {
+		gin.DefaultWriter = options.LogFile
 	}
 
 	rt := gin.Default()
@@ -35,9 +47,12 @@ func StartWeb(fp *os.File, cmd []string, naked bool, port uint16) {
 	rt.Use(csrfGin)
 
 	rt.SetTrustedProxies(nil)
-	rt.LoadHTMLGlob("./assets/template/*")
+
+	templ := template.Must(template.New("assets").ParseFS(options.Assets, "template/*.html"))
+	rt.SetHTMLTemplate(templ)
+
 	// handle static files
-	rt.StaticFS("/assets", assetFS())
+	rt.StaticFS("/assets", http.FS(options.Assets))
 	rt.Static("/records", "./records")
 	rt.GET("/favicon.ico", favIcon)
 
@@ -46,7 +61,7 @@ func StartWeb(fp *os.File, cmd []string, naked bool, port uint16) {
 
 	g1 := rt.Group("/")
 
-	if !naked {
+	if !options.NoAuth {
 		g1.Use(AuthRequired)
 	}
 
@@ -78,5 +93,6 @@ func StartWeb(fp *os.File, cmd []string, naked bool, port uint16) {
 	g1.POST("/rename/:oldname/:newname", renameRec)
 
 	term_conn.Init()
-	rt.RunTLS(":"+strconv.FormatUint(uint64(port), 10), "./tls/cert.pem", "./tls/private-key.pem")
+	port := strconv.FormatUint(uint64(uint16(options.Port)), 10)
+	rt.RunTLS(":"+port, "./tls/cert.pem", "./tls/private-key.pem")
 }

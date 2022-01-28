@@ -30,7 +30,7 @@ func collectSessions(c *gin.Context, cmd string) (players []InteractiveSession) 
 func indexPage(c *gin.Context) {
 	var disabled = ""
 
-	if noAuth {
+	if options.NoAuth {
 		disabled = "disabled"
 	}
 
@@ -56,8 +56,8 @@ func updateIndex(c *gin.Context) {
 		active1 = "active"
 	}
 
-	players := collectSessions(c, cmdToExec[0])
-	records := collectRecords(c, cmdToExec[0])
+	players := collectSessions(c, options.CmdToExec[0])
+	records := collectRecords(c)
 
 	c.HTML(http.StatusOK, "tab.html", gin.H{
 		"players": players,
@@ -81,7 +81,7 @@ func newInteractive(c *gin.Context) {
 
 func newTermConn(c *gin.Context) {
 	id := c.Param("id")
-	term_conn.ConnectTerm(c.Writer, c.Request, false, id, cmdToExec)
+	term_conn.ConnectTerm(c.Writer, c.Request, false, id, options.CmdToExec)
 }
 
 func viewPage(c *gin.Context) {
@@ -101,5 +101,13 @@ func newViewWS(c *gin.Context) {
 }
 
 func favIcon(c *gin.Context) {
-	c.File("./assets/img/favicon.ico")
+	content, err := options.EmbedAssets.ReadFile("assets/img/favicon.ico")
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		c.Data(http.StatusOK, "image/x-icon", content)
+	}
 }

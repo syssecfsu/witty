@@ -68,7 +68,7 @@
             if (icon.src.includes("play")) {
                 icon.src = "/assets/img/pause.svg"
                 pause = false
-                replay_session(term, records, total_dur, rc.value,
+                replay_session(term, records, {{.max_wait}}, total_dur, rc.value,
                     function () {
                         return pause
                     },

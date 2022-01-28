@@ -57,7 +57,7 @@ func getDuration(fname string) int64 {
 	return dur/1000 + 1
 }
 
-func collectRecords(c *gin.Context, cmd string) (records []RecordedSession) {
+func collectRecords(c *gin.Context) (records []RecordedSession) {
 	files, err := ioutil.ReadDir("./records/")
 
 	if err == nil {
@@ -96,7 +96,8 @@ func replayPage(c *gin.Context) {
 	id := c.Param("id")
 	log.Println("replay/ called with", id)
 	c.HTML(http.StatusOK, "replay.html", gin.H{
-		"fname": id,
+		"fname":    id,
+		"max_wait": options.Wait,
 	})
 }
 

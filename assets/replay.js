@@ -88,7 +88,7 @@ function base64ToUint8array(base64) {
 // shift: callback whether we should change position
 // end: callback when playback is finished
 
-async function replay_session(term, records, total_dur, start, paused, prog, end) {
+async function replay_session(term, records, max_wait, total_dur, start, paused, prog, end) {
   var cur = 0
 
   start = parseInt(total_dur * start / 100)
@@ -98,7 +98,7 @@ async function replay_session(term, records, total_dur, start, paused, prog, end
     // we will blast through the beginning of the session
     if (cur >= start) {
       // we are cheating a little bit here, we do not want to wait for too long
-      exit = await sleep(Math.min(item.Duration, 1000), paused)
+      exit = await sleep(Math.min(item.Duration, max_wait), paused)
 
       if (exit) {
         return
