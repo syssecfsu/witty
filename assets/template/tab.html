@@ -1,0 +1,55 @@
+<div class="tab-pane {{.active0}}" id="interactive-cnt" role="tabpanel" aria-labelledby="interactive-tab">
+    <div class="card-deck row justify-content-center">
+
+        <!-- repeat this for each interactive session -->
+        {{range .players}}
+        <div class="card shadow-sm border-danger bg-white mb-3" style="width: 16rem; margin:1em;">
+            <div class="card-body">
+                <h5 class="card-title">Interactive session</h5>
+                <p class="card-text">From <em>{{.Ip}}</em>, running <strong>{{.Cmd}}</strong>, session ID:
+                    <u>{{.Id}}</u>
+                </p>
+                <a class="btn btn-outline-success btn-sm float-end" href="/view/{{.Id}}" target="_blank" role="button">
+                    <img src="/assets/img/view.svg" height="20px">
+                </a>
+            </div>
+        </div>
+        {{end}}
+
+    </div>
+</div>
+
+<div class="tab-pane {{.active1}}" id="saved-cnt" role="tabpanel" aria-labelledby="saved-tab">
+    <div class="card-deck row justify-content-center">
+
+        <!-- repeat this for each recorded session -->
+        {{range .records}}
+        <div class="card shadow-sm border-info mb-3" style="width: 16rem; margin:1em;">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Recorded session</h5>
+                <p class="card-text">File name: <u>{{.Fname}}</u>, file size: <em>{{.Fsize}}KB</em>,
+                    recorded at <strong>{{.Time}}</strong>, duration: <mark>{{.Duration}}s</mark>,
+                </p>
+                <div class="btn-toolbar mt-auto" role="toolbar" aria-label="records buttons">
+                    <a class="btn btn-outline-success btn-sm m-1" href="/replay/{{.Fname}}" target="_blank"
+                        role="button">
+                        <img src="/assets/img/play.svg" height="20px">
+                    </a>
+                    <a class="btn btn-outline-success btn-sm m-1" href="/records/{{.Fname}}" role="button" download>
+                        <img src="/assets/img/download.svg" height="20px">
+                    </a>
+                    <!-- a button show the rename modal and pass data to it, do not change any data-bs- fields. 
+                    that is the magic of bootstrap framework -->
+                    <button type="button" class="btn btn-outline-success btn-sm m-1" data-bs-toggle="modal" data-bs-target="#renameModal" data-bs-whatever="{{.Fname}}" >
+                        <img src="/assets/img/edit.svg" height="20px">
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-sm m-1" onclick="del_btn({{.Fname}})">
+                        <img src="/assets/img/delete.svg" height="20px">
+                    </button>
+                </div>
+            </div>
+        </div>
+        {{end}}
+
+    </div>
+</div>

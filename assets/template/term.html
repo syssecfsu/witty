@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="/assets/img/logo.svg">
+  
+  <script src="/assets/external/xterm.js"></script>
+  <script src="/assets/external/xterm-addon-attach.js"></script>
+  <script src="/assets/external/xterm-addon-fit.js"></script>
+  <script src="/assets/external/xterm-addon-web-links.js"></script>
+
+  <script src="/assets/main.js"></script>
+
+  <link rel="stylesheet" href="/assets/external/xterm.css" />
+  <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/main.css" />
+
+  <title>{{.title}}</title>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-light bg-light shadow-sm navbar-xs">
+      <div class="container-fluid">
+        <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
+          <img src="/assets/img/{{.logo}}.svg" style="margin-right: 0.5rem;" height="32"
+            class="d-inline-block align-text-top">
+          {{.title}}
+        </a>
+        <button type="button" id="record_onoff" class="btn btn-primary btn-sm float-end" value="Record"
+          onclick="recordOnOff()">Record</button>
+      </div>
+    </nav>
+  </header>
+
+
+  <div style="margin-top: 2em;">
+    <div id="terminal">
+      <div id="terminal_view"></div>
+    </div>
+  </div>
+
+  <script>
+    function recordOnOff(on) {
+      let formData = new FormData()
+      formData.append('gorilla.csrf.Token', {{.csrfToken}})
+
+      var btn = document.getElementById("record_onoff");
+      if (btn.value == "Record") {
+        btn.value = "Stop";
+        btn.innerHTML = btn.value
+        fetch("/record/{{.id}}", {
+          method: "POST",
+          body: formData,
+        })
+      } else {
+        btn.value = "Record";
+        btn.innerHTML = btn.value
+        fetch("/stop/{{.id}}", {
+          method: "POST",
+          body: formData,
+        })
+      }
+    }
+
+    function Init() {
+      term = createTerminal("{{.path}}");
+      // print something to test output and scroll
+      var str = [
+        ' ┌────────────────────────────────────────────────────────────────────────────┐\n',
+        ' │                 \u001b[32;1mhttps://github.com/syssecfsu/witty\x1b[0m <- click it!            │\n',
+        ' └────────────────────────────────────────────────────────────────────────────┘\n',
+        ''
+      ].join('');
+
+      term.writeln(str)
+    }
+
+    Init()
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+#terminal {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 10px;
+}
+
+#terminal #terminal_view {
+    padding: 10px 20px;
+    border-radius: 6px;
+    background-color: #282a36;
+}
+
+.xterm-viewport.xterm-viewport {
+    scrollbar-width: thin;
+}
+
+.xterm-viewport::-webkit-scrollbar {
+    width: 10px;
+}
+
+.xterm-viewport::-webkit-scrollbar-track {
+    opacity: 0;
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb {
+    min-height: 20px;
+    background-color: #ffffff20;
+}
+
+.navbar-xs .navbar-brand {
+    padding: 0px 12px;
+    font-size: 20px;
+}
+
+.navbar-xs .navbar-nav>li>a {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" type="image/x-icon" href="/assets/img/logo.svg ">
+
+  <title>Web Terminal</title>
+
+  <!-- Bootstrap core CSS -->
+  <script src="/assets/external/bootstrap.min.js"></script>
+  <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/main.css" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
+      <div class="container-fluid">
+        <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
+          <h3>
+            <!-- <img src="/assets/img/logo.svg" style="margin-right: 0.5rem;" height="32"> -->
+          WiTTY: Web-based interactive TTY</h3>
+        </a>
+        <div class="btn-toolbar float-end" role="toolbar" aria-label="top buttons">
+          <form action="/new" method="post" target="_blank" onsubmit="setTimeout(function(){refresh(true)}, 1000)">
+            {{.csrfField}}
+            <button class="btn btn-primary btn-sm  m-1" type="submit">New Session</button>
+          </form>
+
+          <a class="btn btn-primary btn-sm  m-1 {{.disabled}}" href="/logout" role="button">
+            Logout
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- A modal to rename file -->
+  <div class="modal" id="renameModal" tabindex="-1" aria-labelledby="renameModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body bg-light">
+            <div class="mb-3">
+              <label for="new_name"><strong>Rename</strong></label>
+              <label for="new_name" class="col-form-label"></label>
+              <input type="text" class="form-control" id="new_name">
+            </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="rename_btn()">Rename</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="container-fluid" style="margin-top:1em;">
+      <ul class="nav nav-tabs" id="js_sucks" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link bg-light active" id="interactive-tab" data-bs-toggle="tab"
+            data-bs-target="#interactive-cnt" type="button" role="tab" aria-controls="interactive-cnt"
+            aria-selected="true"><img src="/assets/img/keyboard.svg" style="margin-right: 0.5rem;" height="18px">Live
+            Sessions</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link bg-light" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved-cnt"
+            type="button" role="tab" aria-controls="saved-cnt" aria-selected="false"><img src="/assets/img/record.svg"
+              style="margin-right: 0.5rem;" height="18px">Recorded Sessions</button>
+        </li>
+      </ul>
+
+      <div class="tab-content border border-info rounded-bottom" id="nav-tabContent">
+      </div>
+    </div>
+  </main>
+
+  <script>
+    var active_tab = 0
+
+    function del_btn(path) {
+      let formData = new FormData()
+      formData.append('gorilla.csrf.Token', {{.csrfToken}})
+
+      fetch("/delete/" + path, {
+        method: "POST",
+        body: formData,
+      })
+      setTimeout(function () {
+        refresh(true)
+      }, 20);
+    }
+
+    // fresh the page every 10 seconds, in case active sessions are closed.
+    function refresh(once) {
+      tabs = document.getElementById("nav-tabContent")
+      fetch("/update/" + active_tab)
+        .then((response) => {
+          return response.text();
+        })
+        .then((result) => {
+          tabs.innerHTML = result;
+        });
+
+      if (once == false) {
+        setTimeout(function () {
+          refresh(false)
+        }, 8000);
+      }
+    }
+
+    refresh(false)
+
+    var itab = document.querySelector('#interactive-tab')
+    itab.addEventListener('shown.bs.tab', function (event) {
+      active_tab = 0
+    })
+
+    var stab = document.querySelector('#saved-tab')
+    stab.addEventListener('shown.bs.tab', function (event) {
+      active_tab = 1
+    })
+
+
+    var renameModal = document.getElementById('renameModal')
+
+    renameModal.addEventListener('show.bs.modal', function (event) {
+      var button = event.relatedTarget // which button lunched this modal
+      var file = button.getAttribute('data-bs-whatever')
+      var modalTitle = renameModal.querySelector('.col-form-label')
+      modalTitle.textContent = file
+    })
+
+    function rename_btn() {
+      var modalTitle = renameModal.querySelector('.col-form-label')
+      var modalInput = renameModal.querySelector('.form-control')
+      var newName = modalInput.value.trim()
+
+      if (newName == "") {
+        console.log("New name is empty, ignore request")
+        return
+      }
+
+      path = "/rename/" + modalTitle.textContent + "/" + newName
+
+      let formData = new FormData()
+      formData.append('gorilla.csrf.Token', {{.csrfToken}})
+
+      fetch(path, {
+        method: "POST",
+        body: formData,
+      })
+      setTimeout(function () {
+        refresh(true)
+      }, 20);
+    }
+
+  </script>
+
+</body>
+
+</html>

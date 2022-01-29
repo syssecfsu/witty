@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/x-icon" href="/assets/img/logo.svg">
+    
+    <title>WiTTY Login</title>
+    <script src="/assets/external/bootstrap.min.js"></script>
+    <link href="/assets/external/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/signin.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+    <div class="toast bg-primary text-white border-0" role="alert" aria-live="assertive" aria-atomic="true" id="authMsg"
+        style="position: absolute;top: 0px; right: 10px; z-index:1;">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{.msg}}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+
+    <main class="form-signin">
+        <form action="/login" method="post">
+            <img class="mb-4" src="/assets/img/keyboard.svg" alt="" width="64">
+
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" name="username" placeholder="User Name" value="{{.username}}">
+                <label for="username">User Name</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="passwd" name="passwd" placeholder="Password">
+                <label for="passwd">Password</label>
+            </div>
+
+            <div class="form-floating">
+            {{.csrfField}}
+            </div>
+            <button class="w-100 btn btn-lg btn-primary mt-5" type="submit">Sign in</button>
+            <p class="mt-5 mb-3 text-muted">WiTTY: Web-based Interactive TTY</p>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var element = document.getElementById("authMsg");
+            var toast = new bootstrap.Toast(element);
+
+            toast.show()
+            setTimeout(() => {
+                toast.hide()
+            }, 1500)
+        });
+    </script>
+
+</body>
+
+</html>
