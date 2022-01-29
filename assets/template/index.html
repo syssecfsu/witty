@@ -18,12 +18,11 @@
 
 <body>
   <header>
-    <nav class="navbar navbar-dark bg-dark shadow-sm navbar-xs">
+    <nav class="navbar navbar-dark shadow-sm navbar-xs" style="background-color: #002f55;">
       <div class="container-fluid">
         <a class="navbar-brand mx-auto" href="https://github.com/syssecfsu/witty" target="_blank">
-          <h3>
-            <!-- <img src="/assets/img/logo.svg" style="margin-right: 0.5rem;" height="32"> -->
-          WiTTY: Web-based interactive TTY</h3>
+            <img src="/assets/img/logo_light.svg" style="margin-right: 0.5rem;" height="24">
+            WiTTY: Web-based interactive TTY
         </a>
         <div class="btn-toolbar float-end" role="toolbar" aria-label="top buttons">
           <form action="/new" method="post" target="_blank" onsubmit="setTimeout(function(){refresh(true)}, 1000)">
@@ -44,11 +43,11 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body bg-light">
-            <div class="mb-3">
-              <label for="new_name"><strong>Rename</strong></label>
-              <label for="new_name" class="col-form-label"></label>
-              <input type="text" class="form-control" id="new_name">
-            </div>
+          <div class="mb-3">
+            <label for="new_name"><strong>Rename</strong></label>
+            <label for="new_name" class="col-form-label"></label>
+            <input type="text" class="form-control" id="new_name">
+          </div>
         </div>
         <div class="modal-footer bg-light">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -59,7 +58,7 @@
   </div>
 
   <main>
-    <div class="container-fluid" style="margin-top:1em;">
+    <div class="container-fluid" style="margin-top:2em;">
       <ul class="nav nav-tabs" id="js_sucks" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link bg-light active" id="interactive-tab" data-bs-toggle="tab"
@@ -158,7 +157,6 @@
         refresh(true)
       }, 20);
     }
-
   </script>
 
 </body>
