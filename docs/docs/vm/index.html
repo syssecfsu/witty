@@ -1,0 +1,108 @@
+<!doctype html><html lang=en-us dir=ltr>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="Use WiTTY with SEED VM #  The SEED labs provides a number of security hands-on labs. It is a popular security lab course taught at many universities. The SEED labs use VirtualBox to run its VMs (because VirtualBox is cross-platform.)
+By default, the SEED VM uses only NAT-based network, which means that the VM can access the Internet but not the host machine (i.e., the machine that runs VirtualBox is called the host, and the VM is often called the guest.">
+<meta name=theme-color content="#FFFFFF">
+<meta name=color-scheme content="light dark"><meta property="og:title" content="VirtualBox">
+<meta property="og:description" content="Use WiTTY with SEED VM #  The SEED labs provides a number of security hands-on labs. It is a popular security lab course taught at many universities. The SEED labs use VirtualBox to run its VMs (because VirtualBox is cross-platform.)
+By default, the SEED VM uses only NAT-based network, which means that the VM can access the Internet but not the host machine (i.e., the machine that runs VirtualBox is called the host, and the VM is often called the guest.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://syssecfsu.github.io/witty/docs/vm/"><meta property="article:section" content="docs">
+<title>VirtualBox | WiTTY: Web-based interactive TTY</title>
+<link rel=manifest href=https://syssecfsu.github.io/witty/manifest.json>
+<link rel=icon href=https://syssecfsu.github.io/witty/favicon.png type=image/x-icon>
+<link rel=stylesheet href=https://syssecfsu.github.io/witty/book.min.c6cfeeb36c3b51db0cb2507353c4eecf17c0fdcf2758a3802adc1474fb105e1e.css integrity="sha256-xs/us2w7UdsMslBzU8TuzxfA/c8nWKOAKtwUdPsQXh4=" crossorigin=anonymous>
+<script defer src=https://syssecfsu.github.io/witty/flexsearch.min.js></script>
+<script defer src=https://syssecfsu.github.io/witty/en.search.min.6dbfe7631619689d9b1cb375be53995a78dfe7f6d2f67f62e91feec139a6349c.js integrity="sha256-bb/nYxYZaJ2bHLN1vlOZWnjf5/bS9n9i6R/uwTmmNJw=" crossorigin=anonymous></script>
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a class="flex align-center" href=https://syssecfsu.github.io/witty/><span>WiTTY: Web-based interactive TTY</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/install/>Installation</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/ui/>User Interface</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/record/>Record Sessions</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/vm/ class=active>VirtualBox</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/about/>About</a>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=https://syssecfsu.github.io/witty/svg/menu.svg class=book-icon alt=Menu>
+</label>
+<strong>VirtualBox</strong>
+<label for=toc-control>
+<img src=https://syssecfsu.github.io/witty/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#use-witty-with-seed-vm>Use WiTTY with SEED VM</a></li>
+</ul>
+</nav>
+</aside>
+</header>
+<article class=markdown><h2 id=use-witty-with-seed-vm>
+Use WiTTY with SEED VM
+<a class=anchor href=#use-witty-with-seed-vm>#</a>
+</h2>
+<p>The <a href=https://seedsecuritylabs.org/Labs_20.04/>SEED labs</a> provides a number of security hands-on labs. It is a popular security lab course taught at many universities. The SEED labs use <a href=https://www.virtualbox.org/>VirtualBox</a> to run its VMs (because VirtualBox is cross-platform.)</p>
+<p>By default, the SEED VM uses only NAT-based network, which means that the VM can access the Internet but not the host machine (i.e., the machine that runs VirtualBox is called the host, and the VM is often called the guest.) We need to add a second, host-only network adaptor in order to run WiTTY in the guest and access WiTTY from a browser in the host.</p>
+<p>To do that, first open the <code>Host Network Manager</code> and create a host network if there is not one already, as shown below (on macOS):
+<img src=https://syssecfsu.github.io/witty/static/img/host.png alt=img></p>
+<p>Then, open the setting for the SEED VM, go to the Network setting, and enable the second adaptor, choose the <code>host-only</code> adaptor. Leave the first adaptor as is.</p>
+<p><img src=https://syssecfsu.github.io/witty/static/img/adapter2.png alt=img></p>
+<p>After this, start the VM and list all the adaptors using the command <code>ifconfig</code> in a terminal. Look for the adaptor with an IP address starting with <code>192.168.</code>. You should be able to ssh into the guest using this IP address from the host.</p>
+</article>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+</footer>
+<div class=book-comments>
+</div>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#use-witty-with-seed-vm>Use WiTTY with SEED VM</a></li>
+</ul>
+</nav>
+</div>
+</aside>
+</main>
+</body>
+</html>

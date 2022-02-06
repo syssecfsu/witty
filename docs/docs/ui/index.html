@@ -1,0 +1,180 @@
+<!doctype html><html lang=en-us dir=ltr>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="Sub-commands #  Similar to git and apt, WiTTY uses sub-commands for its various functions. WiTTY currently supports the following sub-commands: adduser, deluser, listusers, replay, merge, run.
+   Sub-command Description     adduser Add/update an authenticated user with their password   deluser Delete an authenticated user   listusers List all the authenticated users   replay Replay a recorded session (set your terminal to 120x36 first)   merge Merge several recorded sessions into one session   run Run a specified CLI program when user connects with browser    Some sub-commands have options.">
+<meta name=theme-color content="#FFFFFF">
+<meta name=color-scheme content="light dark"><meta property="og:title" content="User Interface">
+<meta property="og:description" content="Sub-commands #  Similar to git and apt, WiTTY uses sub-commands for its various functions. WiTTY currently supports the following sub-commands: adduser, deluser, listusers, replay, merge, run.
+   Sub-command Description     adduser Add/update an authenticated user with their password   deluser Delete an authenticated user   listusers List all the authenticated users   replay Replay a recorded session (set your terminal to 120x36 first)   merge Merge several recorded sessions into one session   run Run a specified CLI program when user connects with browser    Some sub-commands have options.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://syssecfsu.github.io/witty/docs/ui/"><meta property="article:section" content="docs">
+<title>User Interface | WiTTY: Web-based interactive TTY</title>
+<link rel=manifest href=https://syssecfsu.github.io/witty/manifest.json>
+<link rel=icon href=https://syssecfsu.github.io/witty/favicon.png type=image/x-icon>
+<link rel=stylesheet href=https://syssecfsu.github.io/witty/book.min.c6cfeeb36c3b51db0cb2507353c4eecf17c0fdcf2758a3802adc1474fb105e1e.css integrity="sha256-xs/us2w7UdsMslBzU8TuzxfA/c8nWKOAKtwUdPsQXh4=" crossorigin=anonymous>
+<script defer src=https://syssecfsu.github.io/witty/flexsearch.min.js></script>
+<script defer src=https://syssecfsu.github.io/witty/en.search.min.6dbfe7631619689d9b1cb375be53995a78dfe7f6d2f67f62e91feec139a6349c.js integrity="sha256-bb/nYxYZaJ2bHLN1vlOZWnjf5/bS9n9i6R/uwTmmNJw=" crossorigin=anonymous></script>
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a class="flex align-center" href=https://syssecfsu.github.io/witty/><span>WiTTY: Web-based interactive TTY</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/install/>Installation</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/ui/ class=active>User Interface</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/record/>Record Sessions</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/vm/>VirtualBox</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/about/>About</a>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=https://syssecfsu.github.io/witty/svg/menu.svg class=book-icon alt=Menu>
+</label>
+<strong>User Interface</strong>
+<label for=toc-control>
+<img src=https://syssecfsu.github.io/witty/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#sub-commands>Sub-commands</a></li>
+<li><a href=#user-authentication>User Authentication</a></li>
+<li><a href=#web-interface-witty-run>Web Interface (witty run)</a></li>
+</ul>
+</nav>
+</aside>
+</header>
+<article class=markdown><h2 id=sub-commands>
+Sub-commands
+<a class=anchor href=#sub-commands>#</a>
+</h2>
+<p>Similar to <code>git</code> and <code>apt</code>, WiTTY uses sub-commands for its various functions. WiTTY currently supports the following sub-commands: <code>adduser</code>, <code>deluser</code>, <code>listusers</code>, <code>replay</code>, <code>merge</code>, <code>run</code>.</p>
+<table>
+<thead>
+<tr>
+<th style=text-align:center>Sub-command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style=text-align:center><code>adduser</code></td>
+<td>Add/update an authenticated user with their password</td>
+</tr>
+<tr>
+<td style=text-align:center><code>deluser</code></td>
+<td>Delete an authenticated user</td>
+</tr>
+<tr>
+<td style=text-align:center><code>listusers</code></td>
+<td>List all the authenticated users</td>
+</tr>
+<tr>
+<td style=text-align:center><code>replay</code></td>
+<td>Replay a recorded session (set your terminal to 120x36 first)</td>
+</tr>
+<tr>
+<td style=text-align:center><code>merge</code></td>
+<td>Merge several recorded sessions into one session</td>
+</tr>
+<tr>
+<td style=text-align:center><code>run</code></td>
+<td>Run a specified CLI program when user connects with browser</td>
+</tr>
+</tbody>
+</table>
+<p>Some sub-commands have options. Use <code>-h</code> to find out more. e.g.,</p>
+<pre tabindex=0><code>$ ./witty  run -h
+Usage of run:
+  -n    Run WiTTY without user authentication
+  -naked
+        Run WiTTY without user authentication
+  -p uint
+        Port number to listen on (default 8080)
+  -port uint
+        Port number to listen on (default 8080)
+  -w uint
+        Max wait time between outputs (default 1000)
+  -wait uint
+        Max wait time between outputs (default 1000)
+</code></pre><h2 id=user-authentication>
+User Authentication
+<a class=anchor href=#user-authentication>#</a>
+</h2>
+<p>WiTTY uses username/password based authentication. The user database is stored in <code>user.db</code> under the main directory of WiTTY. The passwords are salted with 64 bytes of random characters and then hashed using SHA256. In addition, passwords must be 12 bytes or longer. WiTTY provides three sub-commands to manage <code>user.db</code>.</p>
+<ul>
+<li><code>witty adduser &lt;username></code></li>
+<li><code>witty deluser &lt;username></code></li>
+<li><code>witty listusers</code></li>
+</ul>
+<p>They are pretty self-explanatory. Just follow the instructions on screen.</p>
+<h2 id=web-interface-witty-run>
+Web Interface (witty run)
+<a class=anchor href=#web-interface-witty-run>#</a>
+</h2>
+<p>The web interface of WiTTY is mostly self-explanatory. After login, the user is presented with the main interface, as shown in this screenshot:</p>
+<p><img src=https://syssecfsu.github.io/witty/static/img/main.png alt=img></p>
+<p>There are two tabs that list live and recorded sessions, respectively. You can click <code>New Session</code> to create a new interactive session, which opens in a new browser tab. The main window will list the newly created interactive session similar to the follows:</p>
+<p><img src=https://syssecfsu.github.io/witty/static/img/main2.png alt=img></p>
+<p>WiTTY randomly names an interactive session as its unique ID. You can click the <img src=https://syssecfsu.github.io/witty/static/img/view.svg width=16px> icon of an interactive session to open a read-only view of that session.</p>
+<p>On the interactive terminal window, you can record an ongoing session by clicking the <code>record</code> button.</p>
+<p><img src=https://syssecfsu.github.io/witty/static/img/interactive.png alt=img></p>
+<p>After a session has been recorded, the main window&rsquo;s <code>Recorded Sessions</code> will list the records, as shown below. You can replay <img src=https://syssecfsu.github.io/witty/static/img/play.svg width=16px>, download <img src=https://syssecfsu.github.io/witty/static/img/download.svg width=16px>, rename <img src=https://syssecfsu.github.io/witty/static/img/edit.svg width=16px>, and delete <img src=https://syssecfsu.github.io/witty/static/img/delete.svg width=16px> recorded sessions.</p>
+<p><img src=https://syssecfsu.github.io/witty/static/img/main3.png alt=img></p>
+<p>Here is a screencast where we replay a recorded session that updates the <a href=https://pi-hole.net/>pi-hole</a> system. You can fully control the playback using the progress bar. Clicking on the progress bar stops the replay and fast-forwards (or fast-backwards) the screen to that location. You can scroll the screen to view the history when replay is stopped or resume the replay.</p>
+<p><img src=https://syssecfsu.github.io/witty/static/img/replay.gif width=720px>      </p>
+</article>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+</footer>
+<div class=book-comments>
+</div>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#sub-commands>Sub-commands</a></li>
+<li><a href=#user-authentication>User Authentication</a></li>
+<li><a href=#web-interface-witty-run>Web Interface (witty run)</a></li>
+</ul>
+</nav>
+</div>
+</aside>
+</main>
+</body>
+</html>

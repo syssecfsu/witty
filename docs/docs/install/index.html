@@ -1,0 +1,201 @@
+<!doctype html><html lang=en-us dir=ltr>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="Installation #  WiTTY runs on Linux (ARM and x86), macOS, and WSl (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.
+From Binary   Visit the release page of WiTTY at https://github.com/syssecfsu/witty/releases
+  Download the release for your system
+  Decompress the binary with the following command at selected location.
+tar -xzvf releasevxxx_xxx.tar.gz
+  From Source Code   Install the go compiler.">
+<meta name=theme-color content="#FFFFFF">
+<meta name=color-scheme content="light dark"><meta property="og:title" content="Installation">
+<meta property="og:description" content="Installation #  WiTTY runs on Linux (ARM and x86), macOS, and WSl (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.
+From Binary   Visit the release page of WiTTY at https://github.com/syssecfsu/witty/releases
+  Download the release for your system
+  Decompress the binary with the following command at selected location.
+tar -xzvf releasevxxx_xxx.tar.gz
+  From Source Code   Install the go compiler.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://syssecfsu.github.io/witty/docs/install/"><meta property="article:section" content="docs">
+<title>Installation | WiTTY: Web-based interactive TTY</title>
+<link rel=manifest href=https://syssecfsu.github.io/witty/manifest.json>
+<link rel=icon href=https://syssecfsu.github.io/witty/favicon.png type=image/x-icon>
+<link rel=stylesheet href=https://syssecfsu.github.io/witty/book.min.c6cfeeb36c3b51db0cb2507353c4eecf17c0fdcf2758a3802adc1474fb105e1e.css integrity="sha256-xs/us2w7UdsMslBzU8TuzxfA/c8nWKOAKtwUdPsQXh4=" crossorigin=anonymous>
+<script defer src=https://syssecfsu.github.io/witty/flexsearch.min.js></script>
+<script defer src=https://syssecfsu.github.io/witty/en.search.min.6dbfe7631619689d9b1cb375be53995a78dfe7f6d2f67f62e91feec139a6349c.js integrity="sha256-bb/nYxYZaJ2bHLN1vlOZWnjf5/bS9n9i6R/uwTmmNJw=" crossorigin=anonymous></script>
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a class="flex align-center" href=https://syssecfsu.github.io/witty/><span>WiTTY: Web-based interactive TTY</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/install/ class=active>Installation</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/ui/>User Interface</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/record/>Record Sessions</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/vm/>VirtualBox</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/about/>About</a>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=https://syssecfsu.github.io/witty/svg/menu.svg class=book-icon alt=Menu>
+</label>
+<strong>Installation</strong>
+<label for=toc-control>
+<img src=https://syssecfsu.github.io/witty/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#installation>Installation</a></li>
+<li><a href=#post-installation-configuration>Post-installation Configuration</a></li>
+<li><a href=#example-use-case>Example Use Case</a></li>
+</ul>
+</nav>
+</aside>
+</header>
+<article class=markdown><h2 id=installation>
+Installation
+<a class=anchor href=#installation>#</a>
+</h2>
+<p>WiTTY runs on Linux (ARM and x86), macOS, and WSl (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.</p>
+<div class=book-tabs><input type=radio class=toggle name=tabs-install_method id=tabs-install_method-0 checked>
+<label for=tabs-install_method-0>From Binary</label>
+<div class="book-tabs-content markdown-inner"><ol>
+<li>
+<p>Visit the release page of WiTTY at <a href=https://github.com/syssecfsu/witty/releases>https://github.com/syssecfsu/witty/releases</a></p>
+</li>
+<li>
+<p>Download the release for your system</p>
+</li>
+<li>
+<p>Decompress the binary with the following command at selected location.</p>
+<p><code>tar -xzvf releasevxxx_xxx.tar.gz</code></p>
+</li>
+</ol>
+</div><input type=radio class=toggle name=tabs-install_method id=tabs-install_method-1>
+<label for=tabs-install_method-1>From Source Code</label>
+<div class="book-tabs-content markdown-inner"><ol>
+<li>
+<p>Install the <a href=https://go.dev/>go</a> compiler. <strong>Make sure you have go 1.17 or higher.</strong></p>
+</li>
+<li>
+<p>Download the source code release and unzip it, or clone the repo</p>
+<p><code>git clone https://github.com/syssecfsu/witty.git</code></p>
+</li>
+<li>
+<p>Go to the root directory of the source code and build the program with</p>
+<p><code>./build.sh</code></p>
+<p>This shell script will build WiTTY and copy the binary with other needed files to the <code>release/</code> directory. You can move the <code>release/</code> directory to other places you want. <strong>Run WiTTY from this directory.</strong></p>
+</li>
+</ol>
+<blockquote class="book-hint info">
+macOS users can install go with <a href=https://brew.sh/>homebrew</a>. Note that macOS has its own version of golang installed. Do not remove it. Just add the path of newly installed golang at the beginning of the PATH environment variable.
+</blockquote>
+<blockquote class="book-hint danger">
+WiTTY uses <a href=https://pkg.go.dev/embed>go:embed</a> to embed assets in the binary. Remember to re-build WiTTY after changing templates.
+</blockquote>
+</div></div>
+<h2 id=post-installation-configuration>
+Post-installation Configuration
+<a class=anchor href=#post-installation-configuration>#</a>
+</h2>
+<ol>
+<li>
+<p>WiTTY uses TLS to protect its traffic. You can request a free <a href=https://letsencrypt.org/>Let&rsquo;s Encrypt</a> cert or use a self-signed cert. Here is how to create a self-signed cert in the <code>tls</code> sub-directory:</p>
+<p># Generate a private key for a curve</p>
+<p><code>openssl ecparam -name prime256v1 -genkey -noout -out private-key.pem</code></p>
+<p># Create a self-signed certificate</p>
+<p><code>openssl req -new -x509 -key private-key.pem -out cert.pem -days 360</code></p>
+</li>
+<li>
+<p>Add a user to the user accounts, follow the instructions on screen to provide the password</p>
+<p><code>./witty adduser &lt;username></code></p>
+<blockquote class="book-hint info">
+WiTTY uses sub-commands for different functions. See details <a href=https://syssecfsu.github.io/witty/docs/ui/>here</a>
+</blockquote>
+</li>
+<li>
+<p>Start the server and specify the command-line (CLI) program to run when user connects.</p>
+<p><code>./witty run bash</code></p>
+<blockquote class="book-hint info">
+<p>If so desired, you can disable user authenticate with <code>-n/-naked</code>, (not recommended). In the following example, WiTTY will run the <code>ls</code> command without user authentication:</p>
+<p><code>./witty run -naked ls</code></p>
+</blockquote>
+<blockquote class="book-hint info">
+WiTTY normally listens on port 8080. It can be overridden with the <code>-p/-port</code> option:
+</blockquote>
+</li>
+<li>
+<p>Connect to the server with your browser at port 8080 or the one specified in step 6, for example</p>
+<p><code>https://&lt;witty_server_ip>:8080</code></p>
+</li>
+</ol>
+<h2 id=example-use-case>
+Example Use Case
+<a class=anchor href=#example-use-case>#</a>
+</h2>
+<p>WiTTY doesn&rsquo;t support Windows because Windows doesn&rsquo;t have <a href=https://en.wikipedia.org/wiki/Pseudoterminal>PTY</a>. You can still use WiTTY to access Windows terminal through a proxy.</p>
+<p>Here is how to do it. We can run WiTTY on a Raspberry Pi running <a href=https://www.raspberrypi.com/software/>Raspbian</a> (at address <code>192.168.1.2</code>). When a user connects via browser to <code>https://192.168.1.2:9000</code>, WiTTY will start a new <code>ssh</code> session to the Windows machine (at address <code>192.168.1.3</code>) running a SSH server. The command to run WiTTY on the RPI is as follows:</p>
+<p><code>./witty run -p 9000 ssh 192.168.1.3 -l user_name</code></p>
+<p>The user can use any compatible browsers, such as that on a phone, to connect to the Windows machine without install a SSH client.</p>
+<script src=https://syssecfsu.github.io/witty/mermaid.min.js></script>
+<script>mermaid.initialize({flowchart:{useMaxWidth:!0},theme:"default"})</script>
+<p class=mermaid>
+graph LR
+A[user on a phone] -- browser --> B[RPI: 192.168.1.1 <br> runs WiTTY]
+B -- ssh --> C[Windows: 192.168.1.2 <br> runs SSH server ]
+</p>
+</article>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+</footer>
+<div class=book-comments>
+</div>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#installation>Installation</a></li>
+<li><a href=#post-installation-configuration>Post-installation Configuration</a></li>
+<li><a href=#example-use-case>Example Use Case</a></li>
+</ul>
+</nav>
+</div>
+</aside>
+</main>
+</body>
+</html>

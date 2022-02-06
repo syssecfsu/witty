@@ -1,0 +1,116 @@
+<!doctype html><html lang=en-us dir=ltr>
+<head>
+<meta name=generator content="Hugo 0.92.1">
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="Introduction #  WiTTY is a cross-platform, open-source, web-based terminal emulator. It exports the terminal interface on the server (i.e., where WiTTY runs) to the browser. Simply run WiTTY on a computer and give it the command to execute when users connect via the browser. WiTTY has the following features that distinguish itself from other similar tools:
+  WiTTY allows users to easily record, replay, and share console sessions with just a few clicks.">
+<meta name=theme-color content="#FFFFFF">
+<meta name=color-scheme content="light dark"><meta property="og:title" content="Introduction">
+<meta property="og:description" content>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://syssecfsu.github.io/witty/">
+<title>Introduction | WiTTY: Web-based interactive TTY</title>
+<link rel=manifest href=https://syssecfsu.github.io/witty/manifest.json>
+<link rel=icon href=https://syssecfsu.github.io/witty/favicon.png type=image/x-icon>
+<link rel=stylesheet href=https://syssecfsu.github.io/witty/book.min.c6cfeeb36c3b51db0cb2507353c4eecf17c0fdcf2758a3802adc1474fb105e1e.css integrity="sha256-xs/us2w7UdsMslBzU8TuzxfA/c8nWKOAKtwUdPsQXh4=" crossorigin=anonymous>
+<script defer src=https://syssecfsu.github.io/witty/flexsearch.min.js></script>
+<script defer src=https://syssecfsu.github.io/witty/en.search.min.6dbfe7631619689d9b1cb375be53995a78dfe7f6d2f67f62e91feec139a6349c.js integrity="sha256-bb/nYxYZaJ2bHLN1vlOZWnjf5/bS9n9i6R/uwTmmNJw=" crossorigin=anonymous></script>
+<link rel=alternate type=application/rss+xml href=https://syssecfsu.github.io/witty/index.xml title="WiTTY: Web-based interactive TTY">
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a class="flex align-center" href=https://syssecfsu.github.io/witty/><span>WiTTY: Web-based interactive TTY</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/install/>Installation</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/ui/>User Interface</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/record/>Record Sessions</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/vm/>VirtualBox</a>
+</li>
+<li>
+<a href=https://syssecfsu.github.io/witty/docs/about/>About</a>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=https://syssecfsu.github.io/witty/svg/menu.svg class=book-icon alt=Menu>
+</label>
+<strong>Introduction</strong>
+<label for=toc-control>
+<img src=https://syssecfsu.github.io/witty/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents></nav>
+</aside>
+</header>
+<article class=markdown><h1 id=introduction>
+Introduction
+<a class=anchor href=#introduction>#</a>
+</h1>
+<p>WiTTY is a cross-platform, open-source, web-based terminal emulator. It exports the terminal interface on the server (i.e., where WiTTY runs) to the browser. Simply run WiTTY on a computer and give it the command to execute when users connect via the browser. WiTTY has the following features that distinguish itself from other similar tools:</p>
+<ol>
+<li>
+<p>WiTTY allows users to <strong>easily record, replay, and share console sessions</strong> with just a few clicks.</p>
+<blockquote class="book-hint info">
+WiTTY was designed to help teach courses that use UNIX-like command-line interface, such as the software and system security parts of <a href=https://seedsecuritylabs.org/Labs_20.04/>the SEED labs</a>. The biggest challenge in teaching a large such course in the era of pandemic is how to answer students' questions <strong>in the first try</strong>, avoiding long exchange of emails and screenshots. WiTTY makes it a breeze to answer such questions. It is much easier to spot problems with the full history of console sessions.
+</blockquote>
+<blockquote class="book-hint info">
+Instructors can also record their demos in WiTTY and send them to students. Students can replay these demons however they want. This would help them better understand the knowledge.
+</blockquote>
+</li>
+<li>
+<p>It allows others to <strong>view ongoing interactive sessions</strong>. This is useful for providing live remote help.</p>
+<blockquote class="book-hint info">
+<p>An envisioned use of this feature is to allow students to view live sessions of demos by the instructors. It can also allow live, remote help to students.</p>
+<p>A challenge of this use case is that our home networks are almost always behind NAT, making it difficult to run WiTTY as a publicly accessible server. Security is also potentially a concern.</p>
+</blockquote>
+</li>
+<li>
+<p>Great attention has been paid to ensure the cleanses of the code. This, hopefully, provides a useful counter-example of <strong>Do as I say, but not as I do</strong>.</p>
+</li>
+</ol>
+</article>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+</footer>
+<div class=book-comments>
+</div>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents></nav>
+</div>
+</aside>
+</main>
+</body>
+</html>
