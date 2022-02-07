@@ -15,7 +15,7 @@ By default, the SEED VM uses only NAT-based network, which means that the VM can
 <link rel=icon href=https://syssecfsu.github.io/witty/favicon.png type=image/x-icon>
 <link rel=stylesheet href=https://syssecfsu.github.io/witty/book.min.97cfda4f5e3c9fa49a2bf8d401f4ddc0eec576c99cdcf6afbec19173200c37db.css integrity="sha256-l8/aT148n6SaK/jUAfTdwO7Fdsmc3PavvsGRcyAMN9s=" crossorigin=anonymous>
 <script defer src=https://syssecfsu.github.io/witty/flexsearch.min.js></script>
-<script defer src=https://syssecfsu.github.io/witty/en.search.min.6dbfe7631619689d9b1cb375be53995a78dfe7f6d2f67f62e91feec139a6349c.js integrity="sha256-bb/nYxYZaJ2bHLN1vlOZWnjf5/bS9n9i6R/uwTmmNJw=" crossorigin=anonymous></script>
+<script defer src=https://syssecfsu.github.io/witty/en.search.min.d94cd9e9271fd6c7ba798461e1fbda7c357c43fe43568c26463af5c34e1cc416.js integrity="sha256-2UzZ6Scf1se6eYRh4fvafDV8Q/5DVowmRjr1w04cxBY=" crossorigin=anonymous></script>
 </head>
 <body dir=ltr>
 <input type=checkbox class="hidden toggle" id=menu-control>
@@ -66,24 +66,23 @@ By default, the SEED VM uses only NAT-based network, which means that the VM can
 </label>
 </div>
 <aside class="hidden clearfix">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#use-witty-with-seed-vm>Use WiTTY with SEED VM</a></li>
-</ul>
-</nav>
+<nav id=TableOfContents></nav>
 </aside>
 </header>
-<article class=markdown><h2 id=use-witty-with-seed-vm>
+<article class=markdown><h1 id=use-witty-with-seed-vm>
 Use WiTTY with SEED VM
 <a class=anchor href=#use-witty-with-seed-vm>#</a>
-</h2>
+</h1>
 <p>The <a href=https://seedsecuritylabs.org/Labs_20.04/>SEED labs</a> provides a number of security hands-on labs. It is a popular security lab course taught at many universities. The SEED labs use <a href=https://www.virtualbox.org/>VirtualBox</a> to run its VMs (because VirtualBox is cross-platform.)</p>
 <p>By default, the SEED VM uses only NAT-based network, which means that the VM can access the Internet but not the host machine (i.e., the machine that runs VirtualBox is called the host, and the VM is often called the guest.) We need to add a second, host-only network adaptor in order to run WiTTY in the guest and access WiTTY from a browser in the host.</p>
-<p>To do that, first open the <code>Host Network Manager</code> and create a host network if there is not one already, as shown below (on macOS):
+<p>To do that, first open the <code>Host Network Manager</code> and create a host network if there is not one already, as shown below (on macOS.):
 <img src=https://syssecfsu.github.io/witty/static/img/host.png alt=img></p>
 <p>Then, open the setting for the SEED VM, go to the Network setting, and enable the second adaptor, choose the <code>host-only</code> adaptor. Leave the first adaptor as is.</p>
 <p><img src=https://syssecfsu.github.io/witty/static/img/adapter2.png alt=img></p>
 <p>After this, start the VM and list all the adaptors using the command <code>ifconfig</code> in a terminal. Look for the adaptor with an IP address starting with <code>192.168.</code>. You should be able to ssh into the guest using this IP address from the host.</p>
+<blockquote class="book-hint info">
+If the host runs Windows, make sure virtualbox host adapter is not disabled in the Windows network settings if VirtualBox cannot find the host-only Ethernet adapter.
+</blockquote>
 </article>
 <footer class=book-footer>
 <div class="flex flex-wrap justify-between">
@@ -96,11 +95,7 @@ Use WiTTY with SEED VM
 </div>
 <aside class=book-toc>
 <div class=book-toc-content>
-<nav id=TableOfContents>
-<ul>
-<li><a href=#use-witty-with-seed-vm>Use WiTTY with SEED VM</a></li>
-</ul>
-</nav>
+<nav id=TableOfContents></nav>
 </div>
 </aside>
 </main>

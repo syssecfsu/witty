@@ -15,7 +15,7 @@
 <link rel=icon href=https://syssecfsu.github.io/witty/favicon.png type=image/x-icon>
 <link rel=stylesheet href=https://syssecfsu.github.io/witty/book.min.97cfda4f5e3c9fa49a2bf8d401f4ddc0eec576c99cdcf6afbec19173200c37db.css integrity="sha256-l8/aT148n6SaK/jUAfTdwO7Fdsmc3PavvsGRcyAMN9s=" crossorigin=anonymous>
 <script defer src=https://syssecfsu.github.io/witty/flexsearch.min.js></script>
-<script defer src=https://syssecfsu.github.io/witty/en.search.min.6dbfe7631619689d9b1cb375be53995a78dfe7f6d2f67f62e91feec139a6349c.js integrity="sha256-bb/nYxYZaJ2bHLN1vlOZWnjf5/bS9n9i6R/uwTmmNJw=" crossorigin=anonymous></script>
+<script defer src=https://syssecfsu.github.io/witty/en.search.min.d94cd9e9271fd6c7ba798461e1fbda7c357c43fe43568c26463af5c34e1cc416.js integrity="sha256-2UzZ6Scf1se6eYRh4fvafDV8Q/5DVowmRjr1w04cxBY=" crossorigin=anonymous></script>
 </head>
 <body dir=ltr>
 <input type=checkbox class="hidden toggle" id=menu-control>
@@ -66,19 +66,13 @@
 </label>
 </div>
 <aside class="hidden clearfix">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#sub-commands>Sub-commands</a></li>
-<li><a href=#user-authentication>User Authentication</a></li>
-<li><a href=#web-interface-witty-run>Web Interface (witty run)</a></li>
-</ul>
-</nav>
+<nav id=TableOfContents></nav>
 </aside>
 </header>
-<article class=markdown><h2 id=sub-commands>
+<article class=markdown><h1 id=sub-commands>
 Sub-commands
 <a class=anchor href=#sub-commands>#</a>
-</h2>
+</h1>
 <p>Similar to <code>git</code> and <code>apt</code>, WiTTY uses sub-commands for its various functions. WiTTY currently supports the following sub-commands: <code>adduser</code>, <code>deluser</code>, <code>listusers</code>, <code>replay</code>, <code>merge</code>, <code>run</code>.</p>
 <table>
 <thead>
@@ -128,10 +122,10 @@ Usage of run:
         Max wait time between outputs (default 1000)
   -wait uint
         Max wait time between outputs (default 1000)
-</code></pre><h2 id=user-authentication>
+</code></pre><h1 id=user-authentication>
 User Authentication
 <a class=anchor href=#user-authentication>#</a>
-</h2>
+</h1>
 <p>WiTTY uses username/password based authentication. The user database is stored in <code>user.db</code> under the main directory of WiTTY. The passwords are salted with 64 bytes of random characters and then hashed using SHA256. In addition, passwords must be 12 bytes or longer. WiTTY provides three sub-commands to manage <code>user.db</code>.</p>
 <ul>
 <li><code>witty adduser &lt;username></code></li>
@@ -139,10 +133,10 @@ User Authentication
 <li><code>witty listusers</code></li>
 </ul>
 <p>They are pretty self-explanatory. Just follow the instructions on screen.</p>
-<h2 id=web-interface-witty-run>
+<h1 id=web-interface-witty-run>
 Web Interface (witty run)
 <a class=anchor href=#web-interface-witty-run>#</a>
-</h2>
+</h1>
 <p>The web interface of WiTTY is mostly self-explanatory. After login, the user is presented with the main interface, as shown in this screenshot:</p>
 <p><img src=https://syssecfsu.github.io/witty/static/img/main.png alt=img></p>
 <p>There are two tabs that list live and recorded sessions, respectively. You can click <code>New Session</code> to create a new interactive session, which opens in a new browser tab. The main window will list the newly created interactive session similar to the follows:</p>
@@ -166,13 +160,7 @@ Web Interface (witty run)
 </div>
 <aside class=book-toc>
 <div class=book-toc-content>
-<nav id=TableOfContents>
-<ul>
-<li><a href=#sub-commands>Sub-commands</a></li>
-<li><a href=#user-authentication>User Authentication</a></li>
-<li><a href=#web-interface-witty-run>Web Interface (witty run)</a></li>
-</ul>
-</nav>
+<nav id=TableOfContents></nav>
 </div>
 </aside>
 </main>

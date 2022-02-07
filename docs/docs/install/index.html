@@ -2,20 +2,20 @@
 <head>
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=description content="Installation #  WiTTY runs on Linux (ARM and x86), macOS, and WSl (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.
+<meta name=description content="Installation #  WiTTY runs on Linux (ARM and x86), macOS, and WSL2 (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.
 From Binary   Visit the release page of WiTTY at https://github.com/syssecfsu/witty/releases
   Download the release for your system
   Decompress the binary with the following command at selected location.
-tar -xzvf releasevxxx_xxx.tar.gz
-  From Source Code   Install the go compiler.">
+tar -xzvf witty_vx.x.x_xxx.tar.gz
+ For example, use tar -xzvf witty_v1.">
 <meta name=theme-color content="#FFFFFF">
 <meta name=color-scheme content="light dark"><meta property="og:title" content="Installation">
-<meta property="og:description" content="Installation #  WiTTY runs on Linux (ARM and x86), macOS, and WSl (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.
+<meta property="og:description" content="Installation #  WiTTY runs on Linux (ARM and x86), macOS, and WSL2 (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.
 From Binary   Visit the release page of WiTTY at https://github.com/syssecfsu/witty/releases
   Download the release for your system
   Decompress the binary with the following command at selected location.
-tar -xzvf releasevxxx_xxx.tar.gz
-  From Source Code   Install the go compiler.">
+tar -xzvf witty_vx.x.x_xxx.tar.gz
+ For example, use tar -xzvf witty_v1.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://syssecfsu.github.io/witty/docs/install/"><meta property="article:section" content="docs">
 <title>Installation | WiTTY: Web-based interactive TTY</title>
@@ -23,7 +23,7 @@ tar -xzvf releasevxxx_xxx.tar.gz
 <link rel=icon href=https://syssecfsu.github.io/witty/favicon.png type=image/x-icon>
 <link rel=stylesheet href=https://syssecfsu.github.io/witty/book.min.97cfda4f5e3c9fa49a2bf8d401f4ddc0eec576c99cdcf6afbec19173200c37db.css integrity="sha256-l8/aT148n6SaK/jUAfTdwO7Fdsmc3PavvsGRcyAMN9s=" crossorigin=anonymous>
 <script defer src=https://syssecfsu.github.io/witty/flexsearch.min.js></script>
-<script defer src=https://syssecfsu.github.io/witty/en.search.min.6dbfe7631619689d9b1cb375be53995a78dfe7f6d2f67f62e91feec139a6349c.js integrity="sha256-bb/nYxYZaJ2bHLN1vlOZWnjf5/bS9n9i6R/uwTmmNJw=" crossorigin=anonymous></script>
+<script defer src=https://syssecfsu.github.io/witty/en.search.min.d94cd9e9271fd6c7ba798461e1fbda7c357c43fe43568c26463af5c34e1cc416.js integrity="sha256-2UzZ6Scf1se6eYRh4fvafDV8Q/5DVowmRjr1w04cxBY=" crossorigin=anonymous></script>
 </head>
 <body dir=ltr>
 <input type=checkbox class="hidden toggle" id=menu-control>
@@ -74,20 +74,14 @@ tar -xzvf releasevxxx_xxx.tar.gz
 </label>
 </div>
 <aside class="hidden clearfix">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#installation>Installation</a></li>
-<li><a href=#post-installation-configuration>Post-installation Configuration</a></li>
-<li><a href=#example-use-case>Example Use Case</a></li>
-</ul>
-</nav>
+<nav id=TableOfContents></nav>
 </aside>
 </header>
-<article class=markdown><h2 id=installation>
+<article class=markdown><h1 id=installation>
 Installation
 <a class=anchor href=#installation>#</a>
-</h2>
-<p>WiTTY runs on Linux (ARM and x86), macOS, and WSl (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.</p>
+</h1>
+<p>WiTTY runs on Linux (ARM and x86), macOS, and WSL2 (Windows subsystem for Linux, basically Linux). You can install from the pre-built binary or from the source code.</p>
 <div class=book-tabs><input type=radio class=toggle name=tabs-install_method id=tabs-install_method-0 checked>
 <label for=tabs-install_method-0>From Binary</label>
 <div class="book-tabs-content markdown-inner"><ol>
@@ -99,7 +93,10 @@ Installation
 </li>
 <li>
 <p>Decompress the binary with the following command at selected location.</p>
-<p><code>tar -xzvf releasevxxx_xxx.tar.gz</code></p>
+<p><code>tar -xzvf witty_vx.x.x_xxx.tar.gz</code></p>
+<blockquote>
+<p>For example, use <code>tar -xzvf witty_v1.1.1_linux_amd64.tar.gz</code> to decompress release v1.1.1 for Linux on AMD64.</p>
+</blockquote>
 </li>
 </ol>
 </div><input type=radio class=toggle name=tabs-install_method id=tabs-install_method-1>
@@ -125,10 +122,10 @@ macOS users can install go with <a href=https://brew.sh/>homebrew</a>. Note that
 WiTTY uses <a href=https://pkg.go.dev/embed>go:embed</a> to embed assets in the binary. Remember to re-build WiTTY after changing templates.
 </blockquote>
 </div></div>
-<h2 id=post-installation-configuration>
+<h1 id=post-installation-configuration>
 Post-installation Configuration
 <a class=anchor href=#post-installation-configuration>#</a>
-</h2>
+</h1>
 <ol>
 <li>
 <p>WiTTY uses TLS to protect its traffic. You can request a free <a href=https://letsencrypt.org/>Let&rsquo;s Encrypt</a> cert or use a self-signed cert. Here is how to create a self-signed cert in the <code>tls</code> sub-directory:</p>
@@ -160,10 +157,10 @@ WiTTY normally listens on port 8080. It can be overridden with the <code>-p/-por
 <p><code>https://&lt;witty_server_ip>:8080</code></p>
 </li>
 </ol>
-<h2 id=example-use-case>
+<h1 id=example-use-case>
 Example Use Case
 <a class=anchor href=#example-use-case>#</a>
-</h2>
+</h1>
 <p>WiTTY doesn&rsquo;t support Windows because Windows doesn&rsquo;t have <a href=https://en.wikipedia.org/wiki/Pseudoterminal>PTY</a>. You can still use WiTTY to access Windows terminal through a proxy.</p>
 <p>Here is how to do it. We can run WiTTY on a Raspberry Pi running <a href=https://www.raspberrypi.com/software/>Raspbian</a> (at address <code>192.168.1.2</code>). When a user connects via browser to <code>https://192.168.1.2:9000</code>, WiTTY will start a new <code>ssh</code> session to the Windows machine (at address <code>192.168.1.3</code>) running a SSH server. The command to run WiTTY on the RPI is as follows:</p>
 <p><code>./witty run -p 9000 ssh 192.168.1.3 -l user_name</code></p>
@@ -187,13 +184,7 @@ B -- ssh --> C[Windows: 192.168.1.2 <br> runs SSH server ]
 </div>
 <aside class=book-toc>
 <div class=book-toc-content>
-<nav id=TableOfContents>
-<ul>
-<li><a href=#installation>Installation</a></li>
-<li><a href=#post-installation-configuration>Post-installation Configuration</a></li>
-<li><a href=#example-use-case>Example Use Case</a></li>
-</ul>
-</nav>
+<nav id=TableOfContents></nav>
 </div>
 </aside>
 </main>
