@@ -18,12 +18,13 @@ tar -xzvf witty_vx.x.x_xxx.tar.gz
  For example, use tar -xzvf witty_v1.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://syssecfsu.github.io/witty/docs/install/"><meta property="article:section" content="docs">
+<meta property="article:modified_time" content="2022-02-06T20:15:40-05:00">
 <title>Installation | WiTTY: Web-based interactive TTY</title>
 <link rel=manifest href=https://syssecfsu.github.io/witty/manifest.json>
 <link rel=icon href=https://syssecfsu.github.io/witty/favicon.png type=image/x-icon>
 <link rel=stylesheet href=https://syssecfsu.github.io/witty/book.min.97cfda4f5e3c9fa49a2bf8d401f4ddc0eec576c99cdcf6afbec19173200c37db.css integrity="sha256-l8/aT148n6SaK/jUAfTdwO7Fdsmc3PavvsGRcyAMN9s=" crossorigin=anonymous>
 <script defer src=https://syssecfsu.github.io/witty/flexsearch.min.js></script>
-<script defer src=https://syssecfsu.github.io/witty/en.search.min.d94cd9e9271fd6c7ba798461e1fbda7c357c43fe43568c26463af5c34e1cc416.js integrity="sha256-2UzZ6Scf1se6eYRh4fvafDV8Q/5DVowmRjr1w04cxBY=" crossorigin=anonymous></script>
+<script defer src=https://syssecfsu.github.io/witty/en.search.min.28bcb0d34997b542e09ca609614fe8df7743a461230c57511923615abac30b55.js integrity="sha256-KLyw00mXtULgnKYJYU/o33dDpGEjDFdRGSNhWrrDC1U=" crossorigin=anonymous></script>
 </head>
 <body dir=ltr>
 <input type=checkbox class="hidden toggle" id=menu-control>
@@ -33,7 +34,7 @@ tar -xzvf witty_vx.x.x_xxx.tar.gz
 <div class=book-menu-content>
 <nav>
 <h2 class=book-brand>
-<a class="flex align-center" href=https://syssecfsu.github.io/witty/><span>WiTTY: Web-based interactive TTY</span>
+<a class="flex align-center" href=https://syssecfsu.github.io/witty/><img src=https://syssecfsu.github.io/witty/static/img/logo.svg alt=Logo><span>WiTTY: Web-based interactive TTY</span>
 </a>
 </h2>
 <div class=book-search>
@@ -42,21 +43,12 @@ tar -xzvf witty_vx.x.x_xxx.tar.gz
 <ul id=book-search-results></ul>
 </div>
 <ul>
-<li>
-<a href=https://syssecfsu.github.io/witty/docs/install/ class=active>Installation</a>
-</li>
-<li>
-<a href=https://syssecfsu.github.io/witty/docs/ui/>User Interface</a>
-</li>
-<li>
-<a href=https://syssecfsu.github.io/witty/docs/record/>Record Sessions</a>
-</li>
-<li>
-<a href=https://syssecfsu.github.io/witty/docs/vm/>VirtualBox</a>
-</li>
-<li>
-<a href=https://syssecfsu.github.io/witty/docs/about/>About</a>
-</li>
+<li><a href=https://syssecfsu.github.io/witty/docs/install/ class=active>Installation</a></li>
+<li><a href=https://syssecfsu.github.io/witty/docs/ui/>User Interface</a></li>
+<li><a href=https://syssecfsu.github.io/witty/docs/record/>Record Sessions</a></li>
+<li><a href=https://syssecfsu.github.io/witty/docs/vm/>VirtualBox</a></li>
+<li><a href=https://syssecfsu.github.io/witty/docs/about/>About</a>
+<br></li>
 </ul>
 </nav>
 <script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
@@ -169,12 +161,17 @@ Example Use Case
 <script>mermaid.initialize({flowchart:{useMaxWidth:!0},theme:"default"})</script>
 <p class=mermaid>
 graph LR
-A[user on a phone] -- browser --> B[RPI: 192.168.1.1 <br> runs WiTTY]
-B -- ssh --> C[Windows: 192.168.1.2 <br> runs SSH server ]
+A[user on a phone] -- browser --> B[RPI: 192.168.1.2 <br> runs WiTTY]
+B -- ssh --> C[Windows: 192.168.1.3 <br> runs SSH server ]
 </p>
 </article>
 <footer class=book-footer>
 <div class="flex flex-wrap justify-between">
+<div><a class="flex align-center" href=https://github.com/syssecfsu/witty-docs/commit/acce7b514f3f5fc0796bdbef318863e7707934fd title="Last modified by Zhi Wang | February 6, 2022" target=_blank rel=noopener>
+<img src=https://syssecfsu.github.io/witty/svg/calendar.svg class=book-icon alt=Calendar>
+<span>February 6, 2022</span>
+</a>
+</div>
 </div>
 <script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
 </footer>
