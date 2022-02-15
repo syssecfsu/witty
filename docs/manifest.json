@@ -1,6 +1,6 @@
 {
-  "name": "WiTTY: Web-based interactive TTY",
-  "short_name": "WiTTY: Web-based interactive TTY",
+  "name": "WiTTY",
+  "short_name": "WiTTY",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
